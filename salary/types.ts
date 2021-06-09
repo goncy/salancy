@@ -1,8 +1,8 @@
 export enum Seniority {
-  Trainee = "trainee",
-  Junior = "junior",
-  SemiSenior = "semi-senior",
-  Senior = "senior",
+  Trainee = "Trainee (hasta 1 año)",
+  Junior = "Junior (1 a 3 años)",
+  SemiSenior = "Semi Senior (3 a 5 años)",
+  Senior = "Senior (+5 años)",
 }
 
 export enum Currency {
