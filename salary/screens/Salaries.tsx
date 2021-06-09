@@ -1,17 +1,5 @@
 import * as React from "react";
-import {
-  Stack,
-  Text,
-  Table,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  Td,
-  Select,
-  Alert,
-  CloseButton,
-} from "@chakra-ui/react";
+import {Stack, Text, Table, Thead, Tbody, Tr, Th, Td, Select} from "@chakra-ui/react";
 
 import {Salary} from "../types";
 import {parseCurrency} from "../../utils/currency";
@@ -22,7 +10,6 @@ interface Props {
 }
 
 const SalariesScreen: React.FC<Props> = ({salaries}) => {
-  const [isAlertOpen, toggleAlert] = React.useState<boolean>(true);
   const [position, setPosition] = React.useState<Salary["position"]>(null);
   const [seniority, setSeniority] = React.useState<Salary["seniority"]>(null);
   const [currency, setCurrency] = React.useState<Salary["currency"]>(null);
@@ -42,20 +29,6 @@ const SalariesScreen: React.FC<Props> = ({salaries}) => {
 
   return (
     <Stack spacing={6}>
-      {isAlertOpen && (
-        <Alert>
-          Los sueldos son brutos, apróximados y verificados a mano, extraídos de propuestas
-          laborales genéricas que no modifican su valor por posición geográfica, genero o estudios.
-          Tomando trainee como 0 a 1 año de experiencia laboral comprobable, Junior 1 a 3 años, Semi
-          Senior 3 a 5, Senior +5.
-          <CloseButton
-            position="absolute"
-            right="8px"
-            top="8px"
-            onClick={() => toggleAlert(false)}
-          />
-        </Alert>
-      )}
       <Stack direction={{base: "column", md: "row"}} spacing={4}>
         <Select onChange={(event) => setPosition(event.target.value)}>
           <option value="">Todas las posiciones</option>
