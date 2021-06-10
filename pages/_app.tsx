@@ -18,17 +18,15 @@ const App: React.FC<AppProps> = ({Component, pageProps}) => {
       </Head>
       <ChakraProvider theme={theme}>
         <Container
-          as={Stack}
           backgroundColor="white"
           borderRadius="sm"
           height="100%"
-          justifyContent="space-between"
           maxWidth="container.xl"
           padding={4}
         >
           <Component {...pageProps} />
           {/* Inicio de copyright - Cambiar el contenido de los mismos viola el contenido de los terminos de licencia */}
-          <Stack>
+          <Stack marginTop={4} padding={4} spacing={0}>
             <Divider marginY={4} />
             <Text textAlign="center">
               © Copyright {new Date().getFullYear()}. Hecho con ♥ para la comunidad, por{" "}
