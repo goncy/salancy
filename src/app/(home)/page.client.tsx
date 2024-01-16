@@ -2,8 +2,9 @@
 
 import type {Salary} from "@/types";
 
-import {useMemo, useReducer} from "react";
+import {useMemo} from "react";
 import {HelpCircle} from "lucide-react";
+import {useSearchParams, usePathname, useRouter} from "next/navigation";
 
 import {
   Table,
@@ -31,39 +32,38 @@ export default function HomePageClient({
   positions: string[];
   dollarPrice: number;
 }) {
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const router = useRouter();
+
   const originalDollarPrice = Number(process.env.NEXT_PUBLIC_ORIGINAL_DOLLAR_PRICE);
-  const [formData, setFormData] = useReducer(
-    (
-      state: {
-        currency: string;
-        seniority: string;
-        position: string;
-        simulate: boolean;
-      },
-      newState: Partial<{
-        currency: string;
-        seniority: string;
-        position: string;
-        simulate: boolean;
-      }>,
-    ) => ({...state, ...newState}),
-    {
-      currency: "",
-      seniority: "",
-      position: "",
-      simulate: false,
-    },
-  );
-  const matches = useMemo(
-    () =>
-      salaries.filter(
-        ({currency, seniority, title}) =>
-          (!formData.currency || currency === formData.currency) &&
-          (!formData.seniority || seniority === formData.seniority) &&
-          (!formData.position || title === formData.position),
-      ),
-    [formData, salaries],
-  );
+
+  const handleChangeValue = (key: string, value: string) => {
+    const params = new URLSearchParams(searchParams);
+
+    if (value) {
+      params.set(key, value);
+    } else {
+      params.delete(key);
+    }
+
+    router.replace(`${pathname}?${params.toString()}`);
+  };
+
+  const matches = useMemo(() => {
+    const params = new URLSearchParams(searchParams);
+
+    const currencyParam = params.get("currency");
+    const seniorityParam = params.get("seniority");
+    const positionParam = params.get("position");
+
+    return salaries.filter(
+      ({currency, seniority, title}) =>
+        (!currencyParam || currency === currencyParam) &&
+        (!seniorityParam || seniority === seniorityParam) &&
+        (!positionParam || title === positionParam),
+    );
+  }, [salaries]);
 
   return (
     <section className="grid gap-4">
@@ -71,8 +71,8 @@ export default function HomePageClient({
         <div className="flex items-center gap-4">
           <select
             className="flex h-10 w-[180px] items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1"
-            value={formData.position}
-            onChange={(e) => setFormData({position: e.target.value})}
+            defaultValue={searchParams.get("position") ?? ""}
+            onChange={(e) => handleChangeValue("position", e.target.value)}
           >
             <option value="">Todas las posiciones</option>
             {positions.map((position) => (
@@ -81,8 +81,8 @@ export default function HomePageClient({
           </select>
           <select
             className="flex h-10 w-[180px] items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1"
-            value={formData.currency}
-            onChange={(e) => setFormData({currency: e.target.value})}
+            defaultValue={searchParams.get("currency") ?? ""}
+            onChange={(e) => handleChangeValue("currency", e.target.value)}
           >
             <option value="">Todas las monedas</option>
             {currencies.map((currency) => (
@@ -91,8 +91,8 @@ export default function HomePageClient({
           </select>
           <select
             className="flex h-10 w-[180px] items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1"
-            value={formData.seniority}
-            onChange={(e) => setFormData({seniority: e.target.value})}
+            defaultValue={searchParams.get("seniority") ?? ""}
+            onChange={(e) => handleChangeValue("seniority", e.target.value)}
           >
             <option value="">Todos los seniorities</option>
             {seniorities.map((seniority) => (
@@ -120,9 +120,9 @@ export default function HomePageClient({
             </TooltipProvider>
             Simular salarios actualizados
             <Checkbox
-              checked={formData.simulate}
+              checked={Boolean(searchParams.get("simulate"))}
               id="simulate"
-              onCheckedChange={(checked) => setFormData({simulate: Boolean(checked)})}
+              onCheckedChange={(checked) => handleChangeValue("simulate", checked ? "1" : "")}
             />
           </Label>
         )}
@@ -145,7 +145,7 @@ export default function HomePageClient({
               <TableCell>{currency}</TableCell>
               <TableCell>{seniority}</TableCell>
               <TableCell>
-                {(formData.simulate && currency === "ARS"
+                {(Boolean(searchParams.get("simulate")) && currency === "ARS"
                   ? value * (dollarPrice / originalDollarPrice)
                   : value
                 ).toLocaleString("es-AR", {
