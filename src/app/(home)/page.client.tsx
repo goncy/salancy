@@ -154,6 +154,7 @@ export default function HomePageClient({
                 ).toLocaleString("es-AR", {
                   style: "currency",
                   currency,
+                  maximumFractionDigits: 0,
                 })}
               </TableCell>
               <TableCell className="w-[110px] text-right">{count}</TableCell>
