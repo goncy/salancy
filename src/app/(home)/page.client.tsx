@@ -18,6 +18,7 @@ import {Checkbox} from "@/components/ui/checkbox";
 import {Label} from "@/components/ui/label";
 import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from "@/components/ui/tooltip";
 import {cn} from "@/lib/utils";
+import {MultiSelect, MultiSelectOption} from "@/components/ui/multiSelect";
 
 export default function HomePageClient({
   salaries,
@@ -36,26 +37,26 @@ export default function HomePageClient({
   const [filters, setFilters] = useReducer(
     (
       state: {
-        currency: string;
-        seniority: string;
-        position: string;
+        currencyFilter: Array<string>;
+        seniorityFilter: Array<string>;
+        positionFilter: Array<string>;
         simulate: boolean;
         order: keyof Salary;
         ascending: boolean;
       },
       newState: Partial<{
-        currency: string;
-        seniority: string;
-        position: string;
+        currencyFilter: Array<string>;
+        seniorityFilter: Array<string>;
+        positionFilter: Array<string>;
         simulate: boolean;
         order: keyof Salary;
         ascending: boolean;
       }>,
     ) => ({...state, ...newState}),
     {
-      currency: "",
-      seniority: "",
-      position: "",
+      currencyFilter: [],
+      seniorityFilter: [],
+      positionFilter: [],
       simulate: false,
       order: "title",
       ascending: true,
@@ -66,9 +67,9 @@ export default function HomePageClient({
       [...salaries]
         .filter(
           ({currency, seniority, title}) =>
-            (!filters.currency || currency === filters.currency) &&
-            (!filters.seniority || seniority === filters.seniority) &&
-            (!filters.position || title === filters.position),
+          (!Boolean(filters.currencyFilter.length) || filters.currencyFilter.includes(currency)) &&
+          (!Boolean(filters.seniorityFilter.length) || filters.seniorityFilter.includes(seniority)) &&
+          (!Boolean(filters.positionFilter.length) || filters.positionFilter.includes(title)),
         )
         .sort((a, b) => {
           // Filter by currency
@@ -114,36 +115,57 @@ export default function HomePageClient({
     <section className="grid gap-4">
       <nav className="flex items-center justify-between gap-4">
         <div className="flex items-center gap-4">
-          <select
-            className="flex h-10 w-[180px] items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1"
-            value={filters.position}
-            onChange={(e) => setFilters({position: e.target.value})}
-          >
-            <option value="">Todas las posiciones</option>
+          <MultiSelect title="Posiciones">
             {positions.map((position) => (
-              <option key={position}>{position}</option>
+              <MultiSelectOption
+                key={position}
+                checked={filters.positionFilter.includes(position)}
+                onCheckedChange={() => {
+                  if (!filters.positionFilter.includes(position)) {
+                    setFilters({positionFilter: [...filters.positionFilter, position]})
+                  } else {
+                    setFilters({positionFilter: filters.positionFilter.filter(pos => pos !== position)})
+                  }
+                }}
+              >
+                {position}
+              </MultiSelectOption>
             ))}
-          </select>
-          <select
-            className="flex h-10 w-[180px] items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1"
-            value={filters.currency}
-            onChange={(e) => setFilters({currency: e.target.value})}
-          >
-            <option value="">Todas las monedas</option>
+          </MultiSelect>
+          <MultiSelect title="Moneda">
             {currencies.map((currency) => (
-              <option key={currency}>{currency}</option>
+              <MultiSelectOption
+                key={currency}
+                checked={filters.currencyFilter.includes(currency)}
+                onCheckedChange={() => {
+                  if (!filters.currencyFilter.includes(currency)) {
+                    setFilters({currencyFilter: [...filters.currencyFilter, currency]})
+                  } else {
+                    setFilters({currencyFilter: filters.currencyFilter.filter(curr => curr !== currency)})
+                  }
+                }}
+              >
+                {currency}
+              </MultiSelectOption>
             ))}
-          </select>
-          <select
-            className="flex h-10 w-[180px] items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1"
-            value={filters.seniority}
-            onChange={(e) => setFilters({seniority: e.target.value})}
-          >
-            <option value="">Todos los seniorities</option>
-            {seniorities.map((seniority) => (
-              <option key={seniority}>{seniority}</option>
+          </MultiSelect>
+          <MultiSelect title="Seniority">
+             {seniorities.map((seniority) => (
+              <MultiSelectOption
+                key={seniority}
+                checked={filters.seniorityFilter.includes(seniority)}
+                onCheckedChange={() => {
+                  if (!filters.seniorityFilter.includes(seniority)) {
+                    setFilters({seniorityFilter: [...filters.seniorityFilter, seniority]})
+                  } else {
+                    setFilters({seniorityFilter: filters.seniorityFilter.filter(sen => sen !== seniority)})
+                  }
+                }}
+              >
+                {seniority}
+              </MultiSelectOption>
             ))}
-          </select>
+          </MultiSelect>
         </div>
         {originalDollarPrice !== dollarPrice && (
           <Label className="flex items-center gap-2" htmlFor="simulate">
