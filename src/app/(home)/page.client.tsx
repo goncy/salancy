@@ -17,6 +17,7 @@ import {
 import {Checkbox} from "@/components/ui/checkbox";
 import {Label} from "@/components/ui/label";
 import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from "@/components/ui/tooltip";
+import {MultiSelect, MultiSelectOption} from "@/components/ui/multiSelect";
 
 export default function HomePageClient({
   salaries,
@@ -35,22 +36,22 @@ export default function HomePageClient({
   const [formData, setFormData] = useReducer(
     (
       state: {
-        currency: string;
-        seniority: string;
-        position: string;
+        currencyFilter: Array<string>;
+        seniorityFilter: Array<string>;
+        positionFilter: Array<string>;
         simulate: boolean;
       },
       newState: Partial<{
-        currency: string;
-        seniority: string;
-        position: string;
+        currencyFilter: Array<string>;
+        seniorityFilter: Array<string>;
+        positionFilter: Array<string>;
         simulate: boolean;
       }>,
     ) => ({...state, ...newState}),
     {
-      currency: "",
-      seniority: "",
-      position: "",
+      currencyFilter: [],
+      seniorityFilter: [],
+      positionFilter: [],
       simulate: false,
     },
   );
@@ -58,9 +59,9 @@ export default function HomePageClient({
     () =>
       salaries.filter(
         ({currency, seniority, title}) =>
-          (!formData.currency || currency === formData.currency) &&
-          (!formData.seniority || seniority === formData.seniority) &&
-          (!formData.position || title === formData.position),
+          (!Boolean(formData.currencyFilter.length) || formData.currencyFilter.includes(currency)) &&
+          (!Boolean(formData.seniorityFilter.length) || formData.seniorityFilter.includes(seniority)) &&
+          (!Boolean(formData.positionFilter.length) || formData.positionFilter.includes(title)),
       ),
     [formData, salaries],
   );
@@ -69,36 +70,57 @@ export default function HomePageClient({
     <section className="grid gap-4">
       <nav className="flex items-center justify-between gap-4">
         <div className="flex items-center gap-4">
-          <select
-            className="flex h-10 w-[180px] items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1"
-            value={formData.position}
-            onChange={(e) => setFormData({position: e.target.value})}
-          >
-            <option value="">Todas las posiciones</option>
+          <MultiSelect title="Posiciones">
             {positions.map((position) => (
-              <option key={position}>{position}</option>
+              <MultiSelectOption
+                key={position}
+                checked={formData.positionFilter.includes(position)}
+                onCheckedChange={() => {
+                  if (!formData.positionFilter.includes(position)) {
+                    setFormData({positionFilter: [...formData.positionFilter, position]})
+                  } else {
+                    setFormData({positionFilter: formData.positionFilter.filter(pos => pos !== position)})
+                  }
+                }}
+              >
+                {position}
+              </MultiSelectOption>
             ))}
-          </select>
-          <select
-            className="flex h-10 w-[180px] items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1"
-            value={formData.currency}
-            onChange={(e) => setFormData({currency: e.target.value})}
-          >
-            <option value="">Todas las monedas</option>
+          </MultiSelect>
+          <MultiSelect title="Moneda">
             {currencies.map((currency) => (
-              <option key={currency}>{currency}</option>
+              <MultiSelectOption
+                key={currency}
+                checked={formData.currencyFilter.includes(currency)}
+                onCheckedChange={() => {
+                  if (!formData.currencyFilter.includes(currency)) {
+                    setFormData({currencyFilter: [...formData.currencyFilter, currency]})
+                  } else {
+                    setFormData({currencyFilter: formData.currencyFilter.filter(curr => curr !== currency)})
+                  }
+                }}
+              >
+                {currency}
+              </MultiSelectOption>
             ))}
-          </select>
-          <select
-            className="flex h-10 w-[180px] items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1"
-            value={formData.seniority}
-            onChange={(e) => setFormData({seniority: e.target.value})}
-          >
-            <option value="">Todos los seniorities</option>
-            {seniorities.map((seniority) => (
-              <option key={seniority}>{seniority}</option>
+          </MultiSelect>
+          <MultiSelect title="Seniority">
+             {seniorities.map((seniority) => (
+              <MultiSelectOption
+                key={seniority}
+                checked={formData.seniorityFilter.includes(seniority)}
+                onCheckedChange={() => {
+                  if (!formData.seniorityFilter.includes(seniority)) {
+                    setFormData({seniorityFilter: [...formData.seniorityFilter, seniority]})
+                  } else {
+                    setFormData({seniorityFilter: formData.seniorityFilter.filter(sen => sen !== seniority)})
+                  }
+                }}
+              >
+                {seniority}
+              </MultiSelectOption>
             ))}
-          </select>
+          </MultiSelect>
         </div>
         {originalDollarPrice !== dollarPrice && (
           <Label className="flex items-center gap-2" htmlFor="simulate">

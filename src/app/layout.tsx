@@ -13,13 +13,15 @@ export const metadata: Metadata = {
 export default function RootLayout({children}: {children: React.ReactNode}) {
   return (
     <html lang="en">
-      <body className="dark container m-auto grid min-h-screen grid-rows-[auto,1fr,auto] bg-background px-4 font-sans antialiased">
-        <header className="text-xl font-bold leading-[4rem]">Salancy</header>
-        <main className="py-8">{children}</main>
-        <footer className="text-center leading-[4rem] opacity-70">
-          © {new Date().getFullYear()} Salancy - Página actualizada al{" "}
-          {new Date().toLocaleString()}
-        </footer>
+      <body className="dark m-0 bg-background">
+        <div className="container grid min-h-screen grid-rows-[auto,1fr,auto] px-4 font-sans antialiased">
+          <header className="text-xl font-bold leading-[4rem]">Salancy</header>
+          <main className="py-8">{children}</main>
+          <footer className="text-center leading-[4rem] opacity-70">
+            © {new Date().getFullYear()} Salancy - Página actualizada al{" "}
+            {new Date().toLocaleString()}
+          </footer>
+        </div>    
       </body>
     </html>
   );
