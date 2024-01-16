@@ -28,7 +28,7 @@ const api = {
             .slice(1)
             .map((row) => {
               const [date, position, currency, value, seniority] = row.split("\t");
-    
+
               return {
                 date,
                 position: position.trim(),
@@ -38,37 +38,37 @@ const api = {
               };
             }),
         );
-    
+
       const table = new Map<string, { title: string; currency: string; values: number[]; seniority: string; count: number }>();
-    
+
       for (const { position: title, currency, seniority, value } of salaries) {
         const key = `${title}-${currency}-${seniority}`;
-    
+
         if (!table.has(key)) {
           table.set(key, { title, currency, values: [], seniority, count: 0 });
         }
-    
+
         const salary = table.get(key)!;
-    
+
         salary.count++;
         salary.values.push(value);
       }
-    
+
       const calculateMedian = (values: number[]): number => {
         const sortedValues = values.sort((a, b) => a - b);
         const mid = Math.floor(sortedValues.length / 2);
         return sortedValues.length % 2 === 0 ? (sortedValues[mid - 1] + sortedValues[mid]) / 2 : sortedValues[mid];
       };
-    
+
       const result = Array.from(table.values()).sort((a, b) =>
         `${a.title}-${a.currency}-${a.seniority}`.localeCompare(`${b.title}-${b.currency}-${b.seniority}`),
       );
-    
+
       result.forEach((entry) => {
         entry.value = calculateMedian(entry.values);
         delete entry.values;
       });
-    
+
       return result as Salary[];
     },    
     filters: (
