@@ -33,7 +33,7 @@ const api = {
                 date,
                 position: position.trim(),
                 currency: currency.trim(),
-                value: Number(value),
+                value: parseInt(value),
                 seniority: seniority.trim(),
               };
             }),
@@ -51,7 +51,7 @@ const api = {
         const salary = table.get(key)!;
 
         salary.count++;
-        salary.value = (salary.value + value) / 2;
+        salary.value = Math.round((salary.value + value) / 2);
       }
 
       return Array.from(table.values()).sort((a, b) =>
