@@ -12,7 +12,7 @@ const MultiSelect = ({ children, title }: MultiSelectProps) => {
     <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild>
         <button
-          className="flex h-10 w-[180px] items-center justify-between rounded-md border border-input bg-background pl-3 pr-1 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1"
+          className="flex h-10 overflow-y-scroll w-[180px] items-center justify-between rounded-md border border-input bg-background pl-3 pr-1 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1"
           aria-label="Customise options"
         >
           {title} <ChevronDown className="w-4 h-4" />
@@ -44,7 +44,7 @@ const MultiSelectOption = ({
 }: MultiSelectOptionProps) => {
   return (
     <DropdownMenu.CheckboxItem
-      className="group text-[13px] leading-none text-violet11 rounded-[3px] flex items-center h-[25px] relative px-[25px] select-none outline-none data-[disabled]:text-mauve8 data-[disabled]:pointer-events-none data-[highlighted]:bg-violet9 data-[highlighted]:text-violet1"
+      className="group text-[13px] leading-none rounded-[3px] flex items-center h-[35px] relative px-[25px] py-2 select-none outline-none data-[disabled]:pointer-events-none data-[highlighted]:bg-zinc-700 data-[highlighted]:text-white "
       checked={checked}
       onCheckedChange={onCheckedChange}
     >
