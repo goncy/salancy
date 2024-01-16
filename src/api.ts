@@ -39,13 +39,13 @@ const api = {
             }),
         );
 
-      const table = new Map<string, { title: string; currency: string; values: number[]; seniority: string; count: number }>();
+      const table = new Map<string, {title: string; currency: string; values: number[]; seniority: string; count: number}>();
 
-      for (const { position: title, currency, seniority, value } of salaries) {
-        const key = `${title}-${currency}-${seniority}`;
+      for (const {position: title, currency, seniority, value} of salaries) {
+        const key = `${title}-${currency}-${currency}-${seniority}`;
 
         if (!table.has(key)) {
-          table.set(key, { title, currency, values: [], seniority, count: 0 });
+          table.set(key, {title, currency, values: [], seniority, count: 0});
         }
 
         const salary = table.get(key)!;
