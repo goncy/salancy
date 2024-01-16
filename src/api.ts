@@ -4,7 +4,9 @@ const api = {
   dollar: {
     price: async (): Promise<number> => {
       const dolar = await fetch("https://www.bancoprovincia.com.ar/Principal/Dolar", {
-        next: {revalidate: 60 * 60 * 24 * 7},
+        next: {
+          tags: ["dolar"],
+        },
       })
         .then((res) => res.json() as Promise<[string, string, string]>)
         .then(([, value]) => value);
@@ -14,7 +16,11 @@ const api = {
   },
   salary: {
     list: async (): Promise<Salary[]> => {
-      const salaries = await fetch(process.env.SHEETS_URL!)
+      const salaries = await fetch(process.env.SHEETS_URL!, {
+        next: {
+          tags: ["salaries"],
+        },
+      })
         .then((res) => res.text())
         .then((res) =>
           res
