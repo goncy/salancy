@@ -42,7 +42,7 @@ const api = {
       const table = new Map<string, Salary>();
 
       for (const {position: title, currency, seniority, value} of salaries) {
-        const key = `${title}-${currency}-${currency}-${seniority}`;
+        const key = `${title}-${currency}-${seniority}`;
 
         if (!table.has(key)) {
           table.set(key, {title, currency, value, seniority, count: 0});

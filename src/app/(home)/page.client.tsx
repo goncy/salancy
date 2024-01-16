@@ -128,7 +128,10 @@ export default function HomePageClient({
         )}
       </nav>
       <Table className="border">
-        <TableCaption>Siempre tomá los valores como referencia y no como un absoluto.</TableCaption>
+        <TableCaption>
+          Siempre tomá los valores como referencia y no como un absoluto. Un total de{" "}
+          {salaries.reduce((count, salary) => count + salary.count, 0)} salarios reportados.
+        </TableCaption>
         <TableHeader>
           <TableRow>
             <TableHead>Posición</TableHead>
@@ -138,7 +141,7 @@ export default function HomePageClient({
             <TableHead className="w-[110px] text-right">Reportes</TableHead>
           </TableRow>
         </TableHeader>
-        <TableBody>
+        <TableBody className="scroll-y-auto max-h-[80vh]">
           {matches.map(({count, currency, seniority, title, value}) => (
             <TableRow key={`${title}-${currency}-${seniority}`}>
               <TableCell className="font-medium">{title}</TableCell>
