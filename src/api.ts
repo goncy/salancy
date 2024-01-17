@@ -27,11 +27,11 @@ const api = {
             .split("\n")
             .slice(1)
             .map((row) => {
-              const [date, position, currency, value, seniority] = row.split("\t");
+              const [date, title, currency, value, seniority] = row.split("\t");
 
               return {
                 date,
-                position: position.trim(),
+                title: title.trim(),
                 currency: currency.trim(),
                 value: parseInt(value),
                 seniority: seniority.trim(),
@@ -39,26 +39,29 @@ const api = {
             }),
         );
 
-      const table = new Map<string, Salary>();
+      const table = new Map<string, Omit<Salary, "count">[]>();
 
-      for (const {position: title, currency, seniority, value} of salaries) {
-        const key = `${title}-${currency}-${seniority}`;
+      for (const salary of salaries) {
+        const key = `${salary.title}-${salary.currency}-${salary.seniority}`;
 
         if (!table.has(key)) {
-          table.set(key, {title, currency, value, seniority, count: 0});
+          table.set(key, []);
         }
 
-        const salary = table.get(key)!;
+        const item = table.get(key)!;
 
-        salary.count++;
-        salary.value = Math.round((salary.value + value) / 2);
+        item.push(salary);
       }
 
-      return Array.from(table.values()).sort((a, b) =>
-        `${a.title}-${a.currency}-${a.seniority}`.localeCompare(
-          `${b.title}-${b.currency}-${b.seniority}`,
-        ),
-      );
+      return Array.from(table.values()).map((category) => {
+        const sum = category.reduce((acc, salary) => acc + salary.value, 0);
+
+        return {
+          ...category[0],
+          count: category.length,
+          value: sum / category.length,
+        };
+      });
     },
     filters: (
       salaries: Salary[],
