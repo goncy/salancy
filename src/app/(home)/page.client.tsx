@@ -130,7 +130,12 @@ export default function HomePageClient({
       <Table className="border">
         <TableCaption>
           Siempre tomá los valores como referencia y no como un absoluto. Un total de{" "}
-          {salaries.reduce((count, salary) => count + salary.count, 0)} salarios reportados.
+          {salaries.reduce((count, salary) => count + salary.count, 0)} salarios reportados. Agregá
+          el tuyo{" "}
+          <a href="https://forms.gle/e11Kce3JBoDBfHWi7" rel="noopener" target="_blank">
+            acá
+          </a>
+          .
         </TableCaption>
         <TableHeader>
           <TableRow>
