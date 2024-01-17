@@ -17,6 +17,7 @@ import {
 import {Checkbox} from "@/components/ui/checkbox";
 import {Label} from "@/components/ui/label";
 import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from "@/components/ui/tooltip";
+import {cn} from "@/lib/utils";
 
 export default function HomePageClient({
   salaries,
@@ -32,19 +33,23 @@ export default function HomePageClient({
   dollarPrice: number;
 }) {
   const originalDollarPrice = Number(process.env.NEXT_PUBLIC_ORIGINAL_DOLLAR_PRICE);
-  const [formData, setFormData] = useReducer(
+  const [filters, setFilters] = useReducer(
     (
       state: {
         currency: string;
         seniority: string;
         position: string;
         simulate: boolean;
+        order: keyof Salary;
+        ascending: boolean;
       },
       newState: Partial<{
         currency: string;
         seniority: string;
         position: string;
         simulate: boolean;
+        order: keyof Salary;
+        ascending: boolean;
       }>,
     ) => ({...state, ...newState}),
     {
@@ -52,18 +57,58 @@ export default function HomePageClient({
       seniority: "",
       position: "",
       simulate: false,
+      order: "title",
+      ascending: true,
     },
   );
   const matches = useMemo(
     () =>
-      salaries.filter(
-        ({currency, seniority, title}) =>
-          (!formData.currency || currency === formData.currency) &&
-          (!formData.seniority || seniority === formData.seniority) &&
-          (!formData.position || title === formData.position),
-      ),
-    [formData, salaries],
+      [...salaries]
+        .filter(
+          ({currency, seniority, title}) =>
+            (!filters.currency || currency === filters.currency) &&
+            (!filters.seniority || seniority === filters.seniority) &&
+            (!filters.position || title === filters.position),
+        )
+        .sort((a, b) => {
+          // Filter by currency
+          if (filters.order === "value") {
+            const valueA =
+              a.currency === "USD"
+                ? a.value * dollarPrice
+                : filters.simulate
+                  ? a.value * (dollarPrice / originalDollarPrice)
+                  : a.value;
+            const valueB =
+              b.currency === "USD"
+                ? b.value * dollarPrice
+                : filters.simulate
+                  ? b.value * (dollarPrice / originalDollarPrice)
+                  : b.value;
+
+            return filters.ascending ? valueA - valueB : valueB - valueA;
+          }
+
+          // Filter by count
+          if (filters.order === "count") {
+            return filters.ascending ? a.count - b.count : b.count - a.count;
+          }
+
+          // Filter by the rest
+          return filters.ascending
+            ? String(a[filters.order]).localeCompare(String(b[filters.order]))
+            : String(b[filters.order]).localeCompare(String(a[filters.order]));
+        }),
+    [filters, salaries, dollarPrice, originalDollarPrice],
   );
+
+  function handleOrderChange(order: keyof Salary) {
+    if (order === filters.order) {
+      setFilters({ascending: !filters.ascending});
+    } else {
+      setFilters({order});
+    }
+  }
 
   return (
     <section className="grid gap-4">
@@ -71,8 +116,8 @@ export default function HomePageClient({
         <div className="flex items-center gap-4">
           <select
             className="flex h-10 w-[180px] items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1"
-            value={formData.position}
-            onChange={(e) => setFormData({position: e.target.value})}
+            value={filters.position}
+            onChange={(e) => setFilters({position: e.target.value})}
           >
             <option value="">Todas las posiciones</option>
             {positions.map((position) => (
@@ -81,8 +126,8 @@ export default function HomePageClient({
           </select>
           <select
             className="flex h-10 w-[180px] items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1"
-            value={formData.currency}
-            onChange={(e) => setFormData({currency: e.target.value})}
+            value={filters.currency}
+            onChange={(e) => setFilters({currency: e.target.value})}
           >
             <option value="">Todas las monedas</option>
             {currencies.map((currency) => (
@@ -91,8 +136,8 @@ export default function HomePageClient({
           </select>
           <select
             className="flex h-10 w-[180px] items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1"
-            value={formData.seniority}
-            onChange={(e) => setFormData({seniority: e.target.value})}
+            value={filters.seniority}
+            onChange={(e) => setFilters({seniority: e.target.value})}
           >
             <option value="">Todos los seniorities</option>
             {seniorities.map((seniority) => (
@@ -120,9 +165,9 @@ export default function HomePageClient({
             </TooltipProvider>
             Simular salarios actualizados
             <Checkbox
-              checked={formData.simulate}
+              checked={filters.simulate}
               id="simulate"
-              onCheckedChange={(checked) => setFormData({simulate: Boolean(checked)})}
+              onCheckedChange={(checked) => setFilters({simulate: Boolean(checked)})}
             />
           </Label>
         )}
@@ -132,18 +177,51 @@ export default function HomePageClient({
           Siempre tomá los valores como referencia y no como un absoluto. Un total de{" "}
           {salaries.reduce((count, salary) => count + salary.count, 0)} salarios reportados. Agregá
           el tuyo{" "}
-          <a href="https://forms.gle/e11Kce3JBoDBfHWi7" rel="noopener" target="_blank">
+          <a
+            className="underline"
+            href="https://forms.gle/e11Kce3JBoDBfHWi7"
+            rel="noopener"
+            target="_blank"
+          >
             acá
           </a>
           .
         </TableCaption>
         <TableHeader>
           <TableRow>
-            <TableHead>Posición</TableHead>
-            <TableHead>Moneda</TableHead>
-            <TableHead>Seniority</TableHead>
-            <TableHead>Salario</TableHead>
-            <TableHead className="w-[110px] text-right">Reportes</TableHead>
+            <TableHead
+              className={cn({underline: filters.order === "title"}, "cursor-pointer")}
+              onClick={() => handleOrderChange("title")}
+            >
+              Posición
+            </TableHead>
+            <TableHead
+              className={cn({underline: filters.order === "currency"}, "cursor-pointer")}
+              onClick={() => handleOrderChange("currency")}
+            >
+              Moneda
+            </TableHead>
+            <TableHead
+              className={cn({underline: filters.order === "seniority"}, "cursor-pointer")}
+              onClick={() => handleOrderChange("seniority")}
+            >
+              Seniority
+            </TableHead>
+            <TableHead
+              className={cn({underline: filters.order === "value"}, "cursor-pointer")}
+              onClick={() => handleOrderChange("value")}
+            >
+              Salario
+            </TableHead>
+            <TableHead
+              className={cn(
+                {underline: filters.order === "count"},
+                "w-[110px] cursor-pointer text-right",
+              )}
+              onClick={() => handleOrderChange("count")}
+            >
+              Reportes
+            </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody className="scroll-y-auto max-h-[80vh]">
@@ -153,7 +231,7 @@ export default function HomePageClient({
               <TableCell>{currency}</TableCell>
               <TableCell>{seniority}</TableCell>
               <TableCell>
-                {(formData.simulate && currency === "ARS"
+                {(filters.simulate && currency === "ARS"
                   ? value * (dollarPrice / originalDollarPrice)
                   : value
                 ).toLocaleString("es-AR", {
