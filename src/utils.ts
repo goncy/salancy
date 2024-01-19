@@ -18,18 +18,21 @@ export function getMeanSalaries(
       return;
     }
 
+    // Create a draft to modify
+    const draft = structuredClone(salary);
+
     // If simulating, convert to current USD price
     if (filters.simulate) {
-      salary.value = salary.value * (dollarPrice.actual / dollarPrice.old);
+      draft.value = draft.value * (dollarPrice.actual / dollarPrice.old);
     }
 
     // Create an identifier key
-    const id = `${salary.position}-${salary.currency}-${salary.seniority}`;
+    const id = `${draft.position}-${draft.currency}-${draft.seniority}`;
 
     // If key is not on the table, create it
     if (!table.has(id)) {
       table.set(id, {
-        ...salary,
+        ...draft,
         id,
         value: 0,
         count: 0,
@@ -40,7 +43,7 @@ export function getMeanSalaries(
     const item = table.get(id)!;
 
     // Push it to the table
-    item.value += salary.value;
+    item.value += draft.value;
     item.count++;
   });
 
