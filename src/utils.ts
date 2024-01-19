@@ -24,20 +24,20 @@ export function getMeanSalaries(
     }
 
     // Create an identifier key
-    const key = `${salary.position}-${salary.currency}-${salary.seniority}`;
+    const id = `${salary.position}-${salary.currency}-${salary.seniority}`;
 
     // If key is not on the table, create it
-    if (!table.has(key)) {
-      table.set(key, {
+    if (!table.has(id)) {
+      table.set(id, {
         ...salary,
-        key,
+        id,
         value: 0,
         count: 0,
       });
     }
 
     // Get the item
-    const item = table.get(key)!;
+    const item = table.get(id)!;
 
     // Push it to the table
     item.value += salary.value;

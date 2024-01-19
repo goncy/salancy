@@ -6,7 +6,7 @@ export interface Salary {
 }
 
 export interface MeanSalary extends Salary {
-  key: string;
+  id: string;
   count: number;
 }
 

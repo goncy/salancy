@@ -160,8 +160,8 @@ function HomePageClient({
         </TableHeader>
         <TableBody className="scroll-y-auto max-h-[80vh]">
           {salaries.length ? (
-            salaries.map(({key, count, currency, seniority, position, value}) => (
-              <TableRow key={key}>
+            salaries.map(({id, count, currency, seniority, position, value}) => (
+              <TableRow key={id}>
                 <TableCell className="font-medium">{position}</TableCell>
                 <TableCell>{currency}</TableCell>
                 <TableCell>{seniority}</TableCell>
