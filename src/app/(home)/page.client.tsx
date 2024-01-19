@@ -1,19 +1,10 @@
 "use client";
 
-import type {MeanSalary, Options, Salary} from "@/types";
+import type {DollarPrice, Filters, MeanSalary, Options, Salary} from "@/types";
 
 import {HelpCircle} from "lucide-react";
 import {useSearchParams, usePathname} from "next/navigation";
 import {useRouter} from "next/navigation";
-
-interface Filters {
-  position: string;
-  currency: string;
-  seniority: string;
-  sort: keyof MeanSalary;
-  simulate: boolean;
-  direction: "asc" | "desc";
-}
 
 import {
   Table,
@@ -37,7 +28,7 @@ function HomePageClient({
   options,
 }: {
   salaries: MeanSalary[];
-  dollarPrice: {old: number; actual: number};
+  dollarPrice: DollarPrice;
   filters: Filters;
   options: Options;
 }) {
@@ -204,7 +195,7 @@ export default function HomePageClientContainer({
 }: {
   salaries: Salary[];
   options: Options;
-  dollarPrice: {old: number; actual: number};
+  dollarPrice: DollarPrice;
 }) {
   // Get search params from a client component to avoid busting the server cache in every request
   const searchParams = useSearchParams();

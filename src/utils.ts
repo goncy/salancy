@@ -1,19 +1,9 @@
-import type {MeanSalary, Salary} from "./types";
+import type {DollarPrice, Filters, MeanSalary, Salary} from "./types";
 
 export function getMeanSalaries(
   salaries: Salary[],
-  filters: {
-    position: string;
-    currency: string;
-    seniority: string;
-    sort: keyof MeanSalary;
-    direction: "asc" | "desc";
-    simulate: boolean;
-  },
-  dollarPrice: {
-    actual: number;
-    old: number;
-  },
+  filters: Filters,
+  dollarPrice: DollarPrice,
 ): MeanSalary[] {
   // Prepare map to group salaries by title-currency-seniority
   const table = new Map<string, MeanSalary>();

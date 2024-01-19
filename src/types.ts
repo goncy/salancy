@@ -15,3 +15,17 @@ export interface Options {
   currencies: Salary["currency"][];
   seniorities: Salary["seniority"][];
 }
+
+export interface Filters {
+  position: string;
+  currency: string;
+  seniority: string;
+  sort: keyof MeanSalary;
+  simulate: boolean;
+  direction: "asc" | "desc";
+}
+
+export interface DollarPrice {
+  actual: number;
+  old: number;
+}

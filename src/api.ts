@@ -1,8 +1,8 @@
-import type {Options, Salary} from "./types";
+import type {DollarPrice, Options, Salary} from "./types";
 
 const api = {
   dollar: {
-    price: async (): Promise<{old: number; actual: number}> => {
+    price: async (): Promise<DollarPrice> => {
       const dolar = await fetch("https://www.bancoprovincia.com.ar/Principal/Dolar", {
         next: {
           tags: ["dolar"],
