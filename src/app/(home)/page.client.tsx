@@ -26,11 +26,13 @@ function HomePageClient({
   dollarPrice,
   filters,
   options,
+  total,
 }: {
   salaries: MeanSalary[];
   dollarPrice: DollarPrice;
   filters: Filters;
   options: Options;
+  total: number;
 }) {
   const searchParams = useSearchParams();
   const pathname = usePathname();
@@ -120,7 +122,10 @@ function HomePageClient({
         )}
       </nav>
       <Table className="border">
-        <TableCaption>Siempre tomá los valores como referencia y no como un absoluto.</TableCaption>
+        <TableCaption>
+          Siempre tomá los valores como referencia y no como un absoluto. {total} salarios
+          reportados.
+        </TableCaption>
         <TableHeader>
           <TableRow>
             <TableHead
@@ -219,6 +224,7 @@ export default function HomePageClientContainer({
       filters={filters}
       options={options}
       salaries={meanSalaries}
+      total={salaries.length}
     />
   );
 }
