@@ -1,10 +1,19 @@
 "use client";
 
-import type {Salary} from "@/types";
+import type {MeanSalary, Options, Salary} from "@/types";
 
 import {HelpCircle} from "lucide-react";
 import {useSearchParams, usePathname} from "next/navigation";
 import {useRouter} from "next/navigation";
+
+interface Filters {
+  position: string;
+  currency: string;
+  seniority: string;
+  sort: keyof MeanSalary;
+  simulate: boolean;
+  direction: "asc" | "desc";
+}
 
 import {
   Table,
@@ -19,22 +28,18 @@ import {Checkbox} from "@/components/ui/checkbox";
 import {Label} from "@/components/ui/label";
 import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from "@/components/ui/tooltip";
 import {cn} from "@/lib/utils";
+import {getMeanSalaries} from "@/utils";
 
-export default function HomePageClient({
+function HomePageClient({
   salaries,
   dollarPrice,
   filters,
+  options,
 }: {
-  salaries: Salary[];
+  salaries: MeanSalary[];
   dollarPrice: {old: number; actual: number};
-  filters: {
-    currency: {options: string[]; value: string};
-    position: {options: string[]; value: string};
-    seniority: {options: string[]; value: string};
-    sort: keyof Salary;
-    simulate: boolean;
-    direction: "asc" | "desc";
-  };
+  filters: Filters;
+  options: Options;
 }) {
   const searchParams = useSearchParams();
   const pathname = usePathname();
@@ -52,7 +57,7 @@ export default function HomePageClient({
     router.replace(`${pathname}?${params.toString()}`);
   }
 
-  function handleSort(order: keyof Salary) {
+  function handleSort(order: keyof MeanSalary) {
     if (order === filters.sort) {
       handleFilter("direction", filters.direction === "asc" ? "desc" : "asc");
     } else {
@@ -70,7 +75,7 @@ export default function HomePageClient({
             onChange={(e) => handleFilter("position", e.target.value)}
           >
             <option value="">Todas las posiciones</option>
-            {filters.position.options.map((position) => (
+            {options.positions.map((position) => (
               <option key={position}>{position}</option>
             ))}
           </select>
@@ -80,7 +85,7 @@ export default function HomePageClient({
             onChange={(e) => handleFilter("currency", e.target.value)}
           >
             <option value="">Todas las monedas</option>
-            {filters.currency.options.map((currency) => (
+            {options.currencies.map((currency) => (
               <option key={currency}>{currency}</option>
             ))}
           </select>
@@ -90,7 +95,7 @@ export default function HomePageClient({
             onChange={(e) => handleFilter("seniority", e.target.value)}
           >
             <option value="">Todos los seniorities</option>
-            {filters.seniority.options.map((seniority) => (
+            {options.seniorities.map((seniority) => (
               <option key={seniority}>{seniority}</option>
             ))}
           </select>
@@ -128,8 +133,8 @@ export default function HomePageClient({
         <TableHeader>
           <TableRow>
             <TableHead
-              className={cn({underline: filters.sort === "title"}, "cursor-pointer")}
-              onClick={() => handleSort("title")}
+              className={cn({underline: filters.sort === "position"}, "cursor-pointer")}
+              onClick={() => handleSort("position")}
             >
               Posición
             </TableHead>
@@ -163,9 +168,9 @@ export default function HomePageClient({
           </TableRow>
         </TableHeader>
         <TableBody className="scroll-y-auto max-h-[80vh]">
-          {salaries.map(({count, currency, seniority, title, value}) => (
-            <TableRow key={`${title}-${currency}-${seniority}`}>
-              <TableCell className="font-medium">{title}</TableCell>
+          {salaries.map(({key, count, currency, seniority, position, value}) => (
+            <TableRow key={key}>
+              <TableCell className="font-medium">{position}</TableCell>
               <TableCell>{currency}</TableCell>
               <TableCell>{seniority}</TableCell>
               <TableCell>
@@ -181,5 +186,40 @@ export default function HomePageClient({
         </TableBody>
       </Table>
     </section>
+  );
+}
+
+export default function HomePageClientContainer({
+  salaries,
+  dollarPrice,
+  options,
+}: {
+  salaries: Salary[];
+  options: Options;
+  dollarPrice: {old: number; actual: number};
+}) {
+  // Get search params from a client component to avoid busting the server cache in every request
+  const searchParams = useSearchParams();
+
+  // Get filters from params
+  const filters: Filters = {
+    position: searchParams.get("position") || "",
+    currency: searchParams.get("currency") || "",
+    seniority: searchParams.get("seniority") || "",
+    sort: (searchParams.get("sort") as null | keyof MeanSalary) || "position",
+    simulate: searchParams.get("simulate") === "true",
+    direction: (searchParams.get("direction") as "asc" | "desc" | null) || "asc",
+  };
+
+  // Get filtered mean salaries
+  const meanSalaries = getMeanSalaries(salaries, filters, dollarPrice);
+
+  return (
+    <HomePageClient
+      dollarPrice={dollarPrice}
+      filters={filters}
+      options={options}
+      salaries={meanSalaries}
+    />
   );
 }
