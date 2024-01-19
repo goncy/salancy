@@ -168,21 +168,29 @@ function HomePageClient({
           </TableRow>
         </TableHeader>
         <TableBody className="scroll-y-auto max-h-[80vh]">
-          {salaries.map(({key, count, currency, seniority, position, value}) => (
-            <TableRow key={key}>
-              <TableCell className="font-medium">{position}</TableCell>
-              <TableCell>{currency}</TableCell>
-              <TableCell>{seniority}</TableCell>
-              <TableCell>
-                {value.toLocaleString("es-AR", {
-                  style: "currency",
-                  currency,
-                  maximumFractionDigits: 0,
-                })}
+          {salaries.length ? (
+            salaries.map(({key, count, currency, seniority, position, value}) => (
+              <TableRow key={key}>
+                <TableCell className="font-medium">{position}</TableCell>
+                <TableCell>{currency}</TableCell>
+                <TableCell>{seniority}</TableCell>
+                <TableCell>
+                  {value.toLocaleString("es-AR", {
+                    style: "currency",
+                    currency,
+                    maximumFractionDigits: 0,
+                  })}
+                </TableCell>
+                <TableCell className="w-[110px] text-right">{count}</TableCell>
+              </TableRow>
+            ))
+          ) : (
+            <TableRow>
+              <TableCell className="text-center text-muted-foreground" colSpan={5}>
+                No hay salarios que coincidan con los filtros
               </TableCell>
-              <TableCell className="w-[110px] text-right">{count}</TableCell>
             </TableRow>
-          ))}
+          )}
         </TableBody>
       </Table>
     </section>
