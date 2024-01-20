@@ -22,7 +22,7 @@ export function getMeanSalaries(
     const draft = structuredClone(salary);
 
     // If simulating, convert to current USD price
-    if (filters.simulate) {
+    if (filters.simulate && draft.currency === "ARS") {
       draft.value = draft.value * (dollarPrice.actual / dollarPrice.old);
     }
 
