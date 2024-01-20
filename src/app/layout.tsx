@@ -17,11 +17,10 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
         <header className="text-xl font-bold leading-[4rem]">Salancy</header>
         <main className="py-8">{children}</main>
         <footer className="text-center leading-[4rem] text-muted-foreground">
-          © {new Date().getFullYear()}{" "}
           <a className="underline" href="https://github.com/goncy/salancy">
             Salancy
-          </a>
-          , hecho con 🖤 por{" "}
+          </a>{" "}
+          fue hecho con 🖤 por{" "}
           <a className="underline" href="https://goncy.dev">
             Goncy
           </a>{" "}
