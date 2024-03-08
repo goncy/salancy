@@ -58,11 +58,21 @@ function HomePageClient({
     }
   }
 
+  const TOOLTIP_CONTENT_TEXT = `Simulamos los valores tomando el valor original cuando la gente subió su salario (
+    ${dollarPrice.old.toLocaleString("es-AR", {
+      style: "currency",
+      currency: "ARS",
+    })}
+    ) y el valor actual (
+    ${dollarPrice.actual.toLocaleString("es-AR", {style: "currency", currency: "ARS"})}
+    ).`;
+
   return (
     <section className="grid gap-4">
       <nav className="flex items-center justify-between gap-4">
         <div className="flex items-center gap-4">
           <select
+            aria-label="Seleccionar las posiciones"
             className="flex h-10 w-[180px] items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1"
             defaultValue={searchParams.get("position") ?? ""}
             onChange={(e) => handleFilter("position", e.target.value)}
@@ -73,6 +83,7 @@ function HomePageClient({
             ))}
           </select>
           <select
+            aria-label="Seleccionar las monedas"
             className="flex h-10 w-[180px] items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1"
             defaultValue={searchParams.get("currency") ?? ""}
             onChange={(e) => handleFilter("currency", e.target.value)}
@@ -83,6 +94,7 @@ function HomePageClient({
             ))}
           </select>
           <select
+            aria-label="Seleccionar los seniorities"
             className="flex h-10 w-[180px] items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1"
             defaultValue={searchParams.get("seniority") ?? ""}
             onChange={(e) => handleFilter("seniority", e.target.value)}
@@ -98,22 +110,19 @@ function HomePageClient({
             <TooltipProvider delayDuration={100}>
               <Tooltip>
                 <TooltipTrigger>
-                  <HelpCircle className="h-4 w-4 opacity-50" />
+                  <HelpCircle
+                    aria-label={`¿Cómo simulamos los salarios? ${TOOLTIP_CONTENT_TEXT}`}
+                    className="h-4 w-4 opacity-50"
+                  />
                 </TooltipTrigger>
                 <TooltipContent className="max-w-64" side="left">
-                  Simulamos los valores tomando el valor original cuando la gente subió su salario (
-                  {dollarPrice.old.toLocaleString("es-AR", {
-                    style: "currency",
-                    currency: "ARS",
-                  })}
-                  ) y el valor actual (
-                  {dollarPrice.actual.toLocaleString("es-AR", {style: "currency", currency: "ARS"})}
-                  ).
+                  {TOOLTIP_CONTENT_TEXT}
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
             Simular salarios actualizados
             <Checkbox
+              aria-label="Simular salarios actualizados"
               defaultChecked={filters.simulate}
               id="simulate"
               onCheckedChange={(checked) => handleFilter("simulate", String(checked))}
