@@ -38,18 +38,18 @@ function HomePageClient({
   const searchParams = useSearchParams();
 
   function handleFilter(key: string, value: string) {
-    // Construct a new URL to mutate
-    const url = new URL(window.location.href);
+    // Create new search params
+    const params = new URLSearchParams(searchParams);
 
-    // Update its search params
+    // Update or remove the value changed
     if (value) {
-      url.searchParams.set(key, value);
+      params.set(key, value);
     } else {
-      url.searchParams.delete(key);
+      params.delete(key);
     }
 
     // As there is no server-side stuff going on, we can just update the URL without reloading
-    window.history.pushState({}, "", url);
+    window.history.pushState(null, "", `?${params.toString()}`);
   }
 
   function handleSort(order: keyof MeanSalary) {
