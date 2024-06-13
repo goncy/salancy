@@ -24,7 +24,7 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
           <a className="underline" href="https://goncy.dev">
             Goncy
           </a>{" "}
-          - Página actualizada al {new Date().toLocaleString()}
+          - Página actualizada al {new Date().toLocaleString()}.
         </footer>
       </body>
     </html>

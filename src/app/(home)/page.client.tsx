@@ -23,12 +23,14 @@ import {getMeanSalaries} from "@/utils";
 
 function HomePageClient({
   salaries,
+  inflation,
   dollarPrice,
   filters,
   options,
   total,
 }: {
   salaries: MeanSalary[];
+  inflation: number;
   dollarPrice: DollarPrice;
   filters: Filters;
   options: Options;
@@ -101,14 +103,8 @@ function HomePageClient({
                   <HelpCircle className="h-4 w-4 opacity-50" />
                 </TooltipTrigger>
                 <TooltipContent className="max-w-64" side="left">
-                  Simulamos los valores tomando el valor original cuando la gente subió su salario (
-                  {dollarPrice.old.toLocaleString("es-AR", {
-                    style: "currency",
-                    currency: "ARS",
-                  })}
-                  ) y el valor actual (
-                  {dollarPrice.actual.toLocaleString("es-AR", {style: "currency", currency: "ARS"})}
-                  ).
+                  Simulamos los valores usando la inflación desde cuando la gente subió su salario (
+                  {inflation}%).
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
@@ -197,10 +193,12 @@ export default function HomePageClientContainer({
   salaries,
   dollarPrice,
   options,
+  inflation,
 }: {
   salaries: Salary[];
   options: Options;
   dollarPrice: DollarPrice;
+  inflation: number;
 }) {
   // Get search params from a client component to avoid busting the server cache in every request
   const searchParams = useSearchParams();
@@ -211,17 +209,18 @@ export default function HomePageClientContainer({
     currency: searchParams.get("currency") || "",
     seniority: searchParams.get("seniority") || "",
     sort: (searchParams.get("sort") as null | keyof MeanSalary) || "position",
-    simulate: searchParams.get("simulate") === "true",
+    simulate: searchParams.get("simulate") !== "false",
     direction: (searchParams.get("direction") as "asc" | "desc" | null) || "asc",
   };
 
   // Get filtered mean salaries
-  const meanSalaries = getMeanSalaries(salaries, filters, dollarPrice);
+  const meanSalaries = getMeanSalaries(salaries, filters, dollarPrice, inflation);
 
   return (
     <HomePageClient
       dollarPrice={dollarPrice}
       filters={filters}
+      inflation={inflation}
       options={options}
       salaries={meanSalaries}
       total={salaries.length}

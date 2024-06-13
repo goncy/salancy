@@ -4,6 +4,7 @@ export function getMeanSalaries(
   salaries: Salary[],
   filters: Filters,
   dollarPrice: DollarPrice,
+  inflation: number,
 ): MeanSalary[] {
   // Prepare map to group salaries by title-currency-seniority
   const table = new Map<string, MeanSalary>();
@@ -23,7 +24,7 @@ export function getMeanSalaries(
 
     // If simulating, convert to current USD price
     if (filters.simulate && draft.currency === "ARS") {
-      draft.value = draft.value * (dollarPrice.actual / dollarPrice.old);
+      draft.value = draft.value * (1 + inflation / 100);
     }
 
     // Create an identifier key
