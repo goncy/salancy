@@ -5,8 +5,8 @@ import HomePageClient from "./page.client";
 // Force static generation
 export const dynamic = "force-static";
 
-// Revalidate every week
-export const revalidate = 60 * 60 * 24 * 7;
+// Revalidate every month
+export const revalidate = 60 * 60 * 24 * 7 * 4;
 
 export default async function Home() {
   const salaries = await api.salary.list();

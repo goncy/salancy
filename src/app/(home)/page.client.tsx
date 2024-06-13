@@ -3,8 +3,7 @@
 import type {DollarPrice, Filters, MeanSalary, Options, Salary} from "@/types";
 
 import {HelpCircle} from "lucide-react";
-import {useSearchParams, usePathname} from "next/navigation";
-import {useRouter} from "next/navigation";
+import {useSearchParams} from "next/navigation";
 
 import {
   Table,
@@ -37,19 +36,20 @@ function HomePageClient({
   total: number;
 }) {
   const searchParams = useSearchParams();
-  const pathname = usePathname();
-  const router = useRouter();
 
   function handleFilter(key: string, value: string) {
-    const params = new URLSearchParams(searchParams);
+    // Construct a new URL to mutate
+    const url = new URL(window.location.href);
 
+    // Update its search params
     if (value) {
-      params.set(key, value);
+      url.searchParams.set(key, value);
     } else {
-      params.delete(key);
+      url.searchParams.delete(key);
     }
 
-    router.replace(`${pathname}?${params.toString()}`);
+    // As there is no server-side stuff going on, we can just update the URL without reloading
+    window.history.pushState({}, "", url);
   }
 
   function handleSort(order: keyof MeanSalary) {
@@ -62,10 +62,10 @@ function HomePageClient({
 
   return (
     <section className="grid gap-4">
-      <nav className="flex items-center justify-between gap-4">
-        <div className="flex items-center gap-4">
+      <nav className="flex w-full flex-col items-center justify-between gap-4 sm:flex-row">
+        <div className="flex w-full flex-col items-center gap-4 sm:flex-row">
           <select
-            className="flex h-10 w-[180px] items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1"
+            className="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 sm:w-[180px] [&>span]:line-clamp-1"
             defaultValue={searchParams.get("position") ?? ""}
             onChange={(e) => handleFilter("position", e.target.value)}
           >
@@ -75,7 +75,7 @@ function HomePageClient({
             ))}
           </select>
           <select
-            className="flex h-10 w-[180px] items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1"
+            className="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 sm:w-[180px] [&>span]:line-clamp-1"
             defaultValue={searchParams.get("currency") ?? ""}
             onChange={(e) => handleFilter("currency", e.target.value)}
           >
@@ -85,7 +85,7 @@ function HomePageClient({
             ))}
           </select>
           <select
-            className="flex h-10 w-[180px] items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1"
+            className="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 sm:w-[180px] [&>span]:line-clamp-1"
             defaultValue={searchParams.get("seniority") ?? ""}
             onChange={(e) => handleFilter("seniority", e.target.value)}
           >
@@ -96,7 +96,16 @@ function HomePageClient({
           </select>
         </div>
         {dollarPrice.old !== dollarPrice.actual && (
-          <Label className="flex items-center gap-2" htmlFor="simulate">
+          <Label
+            className="flex w-full items-center justify-center gap-2 sm:justify-end"
+            htmlFor="simulate"
+          >
+            <Checkbox
+              defaultChecked={filters.simulate}
+              id="simulate"
+              onCheckedChange={(checked) => handleFilter("simulate", String(checked))}
+            />
+            Simular salarios actualizados
             <TooltipProvider delayDuration={100}>
               <Tooltip>
                 <TooltipTrigger>
@@ -108,12 +117,6 @@ function HomePageClient({
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
-            Simular salarios actualizados
-            <Checkbox
-              defaultChecked={filters.simulate}
-              id="simulate"
-              onCheckedChange={(checked) => handleFilter("simulate", String(checked))}
-            />
           </Label>
         )}
       </nav>
@@ -125,7 +128,7 @@ function HomePageClient({
         <TableHeader>
           <TableRow>
             <TableHead
-              className={cn({underline: filters.sort === "position"}, "cursor-pointer")}
+              className={cn({underline: filters.sort === "position"}, "min-w-48 cursor-pointer")}
               onClick={() => handleSort("position")}
             >
               Posición
@@ -137,7 +140,7 @@ function HomePageClient({
               Moneda
             </TableHead>
             <TableHead
-              className={cn({underline: filters.sort === "seniority"}, "cursor-pointer")}
+              className={cn({underline: filters.sort === "seniority"}, "min-w-48 cursor-pointer")}
               onClick={() => handleSort("seniority")}
             >
               Seniority
