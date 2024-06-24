@@ -35,11 +35,9 @@ function HomePageClient({
   options: Options;
   total: number;
 }) {
-  const searchParams = useSearchParams();
-
   function handleFilter(key: string, value: string) {
     // Create new search params
-    const params = new URLSearchParams(searchParams);
+    const params = new URLSearchParams(window.location.search);
 
     // Update or remove the value changed
     if (value) {
@@ -66,7 +64,7 @@ function HomePageClient({
         <div className="flex w-full flex-col items-center gap-4 sm:flex-row">
           <select
             className="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 sm:w-[180px] [&>span]:line-clamp-1"
-            defaultValue={searchParams.get("position") ?? ""}
+            defaultValue={filters.position}
             onChange={(e) => handleFilter("position", e.target.value)}
           >
             <option value="">Todas las posiciones</option>
@@ -76,7 +74,7 @@ function HomePageClient({
           </select>
           <select
             className="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 sm:w-[180px] [&>span]:line-clamp-1"
-            defaultValue={searchParams.get("currency") ?? ""}
+            defaultValue={filters.currency}
             onChange={(e) => handleFilter("currency", e.target.value)}
           >
             <option value="">Todas las monedas</option>
@@ -86,7 +84,7 @@ function HomePageClient({
           </select>
           <select
             className="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 sm:w-[180px] [&>span]:line-clamp-1"
-            defaultValue={searchParams.get("seniority") ?? ""}
+            defaultValue={filters.seniority}
             onChange={(e) => handleFilter("seniority", e.target.value)}
           >
             <option value="">Todos los seniorities</option>
