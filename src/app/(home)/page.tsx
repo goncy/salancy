@@ -1,6 +1,6 @@
-import api from "@/api";
-
 import HomePageClient from "./page.client";
+
+import api from "@/api";
 
 // Force static generation
 export const dynamic = "force-static";
