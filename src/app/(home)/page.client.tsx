@@ -3,8 +3,7 @@
 import type {DollarPrice, Filters, MeanSalary, Options, Salary} from "@/types";
 
 import {HelpCircle} from "lucide-react";
-import {useSearchParams, usePathname} from "next/navigation";
-import {useRouter} from "next/navigation";
+import {useSearchParams} from "next/navigation";
 
 import {
   Table,
@@ -23,31 +22,32 @@ import {getMeanSalaries} from "@/utils";
 
 function HomePageClient({
   salaries,
+  inflation,
   dollarPrice,
   filters,
   options,
   total,
 }: {
   salaries: MeanSalary[];
+  inflation: number;
   dollarPrice: DollarPrice;
   filters: Filters;
   options: Options;
   total: number;
 }) {
-  const searchParams = useSearchParams();
-  const pathname = usePathname();
-  const router = useRouter();
-
   function handleFilter(key: string, value: string) {
-    const params = new URLSearchParams(searchParams);
+    // Create new search params
+    const params = new URLSearchParams(window.location.search);
 
+    // Update or remove the value changed
     if (value) {
       params.set(key, value);
     } else {
       params.delete(key);
     }
 
-    router.replace(`${pathname}?${params.toString()}`);
+    // As there is no server-side stuff going on, we can just update the URL without reloading
+    window.history.pushState(null, "", `?${params.toString()}`);
   }
 
   function handleSort(order: keyof MeanSalary) {
@@ -60,12 +60,12 @@ function HomePageClient({
 
   return (
     <section className="grid gap-4">
-      <nav className="flex items-center justify-between gap-4">
-        <div className="flex items-center gap-4">
+      <nav className="flex w-full flex-col items-center justify-between gap-4 sm:flex-row">
+        <div className="flex w-full flex-col items-center gap-4 sm:flex-row">
           <select
             aria-label="Seleccionar las posiciones"
-            className="flex h-10 w-[180px] items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1"
-            defaultValue={searchParams.get("position") ?? ""}
+            className="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 sm:w-[180px] [&>span]:line-clamp-1"
+            defaultValue={filters.position}
             onChange={(e) => handleFilter("position", e.target.value)}
           >
             <option value="">Todas las posiciones</option>
@@ -75,8 +75,8 @@ function HomePageClient({
           </select>
           <select
             aria-label="Seleccionar las monedas"
-            className="flex h-10 w-[180px] items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1"
-            defaultValue={searchParams.get("currency") ?? ""}
+            className="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 sm:w-[180px] [&>span]:line-clamp-1"
+            defaultValue={filters.currency}
             onChange={(e) => handleFilter("currency", e.target.value)}
           >
             <option value="">Todas las monedas</option>
@@ -86,8 +86,8 @@ function HomePageClient({
           </select>
           <select
             aria-label="Seleccionar los seniorities"
-            className="flex h-10 w-[180px] items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1"
-            defaultValue={searchParams.get("seniority") ?? ""}
+            className="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 sm:w-[180px] [&>span]:line-clamp-1"
+            defaultValue={filters.seniority}
             onChange={(e) => handleFilter("seniority", e.target.value)}
           >
             <option value="">Todos los seniorities</option>
@@ -97,45 +97,30 @@ function HomePageClient({
           </select>
         </div>
         {dollarPrice.old !== dollarPrice.actual && (
-          <Label className="flex items-center gap-2" htmlFor="simulate">
-            <TooltipProvider delayDuration={100}>
-              <Tooltip>
-                <TooltipTrigger>
-                  <HelpCircle
-                    aria-label={`¿Cómo simulamos los salarios? Simulamos los valores tomando el valor original cuando la gente subió su salario (
-    ${dollarPrice.old.toLocaleString("es-AR", {
-      style: "currency",
-      currency: "ARS",
-    })}
-    ) y el valor actual (
-    ${dollarPrice.actual.toLocaleString("es-AR", { style: "currency", currency: "ARS" })}
-    ).`}
-                    className="h-4 w-4 opacity-50"
-                  />
-                </TooltipTrigger>
-                <TooltipContent className="max-w-64" side="left">
-                  Simulamos los valores tomando el valor original cuando la
-                  gente subió su salario (
-                  {dollarPrice.old.toLocaleString("es-AR", {
-                    style: "currency",
-                    currency: "ARS",
-                  })}
-                  ) y el valor actual (
-                  {dollarPrice.actual.toLocaleString("es-AR", {
-                    style: "currency",
-                    currency: "ARS",
-                  })}
-                  ).
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-            Simular salarios actualizados
+          <Label
+            className="flex w-full items-center justify-center gap-2 sm:justify-end"
+            htmlFor="simulate"
+          >
             <Checkbox
               aria-label="Simular salarios actualizados"
               defaultChecked={filters.simulate}
               id="simulate"
               onCheckedChange={(checked) => handleFilter("simulate", String(checked))}
             />
+            Simular salarios actualizados
+            <TooltipProvider delayDuration={100}>
+              <Tooltip>
+                <TooltipTrigger>
+                  <HelpCircle
+                    aria-label={`Simulamos los valores usando la inflación desde cuando la gente subió su salario ({inflation}%).`}
+                    className="h-4 w-4 opacity-50"
+                  />
+                </TooltipTrigger>
+                <TooltipContent className="max-w-64" side="left">
+                  Simulamos los valores usando la inflación desde cuando la gente subió su salario ({inflation}%).
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           </Label>
         )}
       </nav>
@@ -147,7 +132,7 @@ function HomePageClient({
         <TableHeader>
           <TableRow>
             <TableHead
-              className={cn({underline: filters.sort === "position"}, "cursor-pointer")}
+              className={cn({underline: filters.sort === "position"}, "min-w-48 cursor-pointer")}
               onClick={() => handleSort("position")}
             >
               Posición
@@ -159,7 +144,7 @@ function HomePageClient({
               Moneda
             </TableHead>
             <TableHead
-              className={cn({underline: filters.sort === "seniority"}, "cursor-pointer")}
+              className={cn({underline: filters.sort === "seniority"}, "min-w-48 cursor-pointer")}
               onClick={() => handleSort("seniority")}
             >
               Seniority
@@ -215,10 +200,12 @@ export default function HomePageClientContainer({
   salaries,
   dollarPrice,
   options,
+  inflation,
 }: {
   salaries: Salary[];
   options: Options;
   dollarPrice: DollarPrice;
+  inflation: number;
 }) {
   // Get search params from a client component to avoid busting the server cache in every request
   const searchParams = useSearchParams();
@@ -229,17 +216,18 @@ export default function HomePageClientContainer({
     currency: searchParams.get("currency") || "",
     seniority: searchParams.get("seniority") || "",
     sort: (searchParams.get("sort") as null | keyof MeanSalary) || "position",
-    simulate: searchParams.get("simulate") === "true",
+    simulate: searchParams.get("simulate") !== "false",
     direction: (searchParams.get("direction") as "asc" | "desc" | null) || "asc",
   };
 
   // Get filtered mean salaries
-  const meanSalaries = getMeanSalaries(salaries, filters, dollarPrice);
+  const meanSalaries = getMeanSalaries(salaries, filters, dollarPrice, inflation);
 
   return (
     <HomePageClient
       dollarPrice={dollarPrice}
       filters={filters}
+      inflation={inflation}
       options={options}
       salaries={meanSalaries}
       total={salaries.length}

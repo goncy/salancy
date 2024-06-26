@@ -1,5 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  experimental: {
+    reactCompiler: true,
+  },
   logging: {
     fetches: {
       fullUrl: true,
@@ -7,4 +10,4 @@ const nextConfig = {
   },
 };
 
-module.exports = nextConfig;
+export default nextConfig;
