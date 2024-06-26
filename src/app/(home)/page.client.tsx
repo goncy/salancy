@@ -112,12 +112,13 @@ function HomePageClient({
               <Tooltip>
                 <TooltipTrigger>
                   <HelpCircle
-                    aria-label={`Simulamos los valores usando la inflación desde cuando la gente subió su salario ({inflation}%).`}
+                    aria-label="Simulamos los valores usando la inflación desde cuando la gente subió su salario ({inflation}%)."
                     className="h-4 w-4 opacity-50"
                   />
                 </TooltipTrigger>
                 <TooltipContent className="max-w-64" side="left">
-                  Simulamos los valores usando la inflación desde cuando la gente subió su salario ({inflation}%).
+                  Simulamos los valores usando la inflación desde cuando la gente subió su salario (
+                  {inflation}%).
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
@@ -169,19 +170,19 @@ function HomePageClient({
         <TableBody className="scroll-y-auto max-h-[80vh]">
           {salaries.length ? (
             salaries.map(({id, count, currency, seniority, position, value}) => (
-                <TableRow key={id}>
-                  <TableCell className="font-medium">{position}</TableCell>
-                  <TableCell>{currency}</TableCell>
-                  <TableCell>{seniority}</TableCell>
-                  <TableCell>
-                    {value.toLocaleString("es-AR", {
-                      style: "currency",
-                      currency,
-                      maximumFractionDigits: 0,
-                    })}
-                  </TableCell>
+              <TableRow key={id}>
+                <TableCell className="font-medium">{position}</TableCell>
+                <TableCell>{currency}</TableCell>
+                <TableCell>{seniority}</TableCell>
+                <TableCell>
+                  {value.toLocaleString("es-AR", {
+                    style: "currency",
+                    currency,
+                    maximumFractionDigits: 0,
+                  })}
+                </TableCell>
                 <TableCell className="w-[110px] text-right">{count}</TableCell>
-                </TableRow>
+              </TableRow>
             ))
           ) : (
             <TableRow>
