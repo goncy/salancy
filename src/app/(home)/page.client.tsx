@@ -63,6 +63,7 @@ function HomePageClient({
       <nav className="flex w-full flex-col items-center justify-between gap-4 sm:flex-row">
         <div className="flex w-full flex-col items-center gap-4 sm:flex-row">
           <select
+            aria-label="Seleccionar las posiciones"
             className="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 sm:w-[180px] [&>span]:line-clamp-1"
             defaultValue={filters.position}
             onChange={(e) => handleFilter("position", e.target.value)}
@@ -73,6 +74,7 @@ function HomePageClient({
             ))}
           </select>
           <select
+            aria-label="Seleccionar las monedas"
             className="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 sm:w-[180px] [&>span]:line-clamp-1"
             defaultValue={filters.currency}
             onChange={(e) => handleFilter("currency", e.target.value)}
@@ -83,6 +85,7 @@ function HomePageClient({
             ))}
           </select>
           <select
+            aria-label="Seleccionar los seniorities"
             className="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 sm:w-[180px] [&>span]:line-clamp-1"
             defaultValue={filters.seniority}
             onChange={(e) => handleFilter("seniority", e.target.value)}
@@ -99,6 +102,7 @@ function HomePageClient({
             htmlFor="simulate"
           >
             <Checkbox
+              aria-label="Simular salarios actualizados"
               defaultChecked={filters.simulate}
               id="simulate"
               onCheckedChange={(checked) => handleFilter("simulate", String(checked))}
@@ -107,11 +111,13 @@ function HomePageClient({
             <TooltipProvider delayDuration={100}>
               <Tooltip>
                 <TooltipTrigger>
-                  <HelpCircle className="h-4 w-4 opacity-50" />
+                  <HelpCircle
+                    aria-label={`Simulamos los valores usando la inflación desde cuando la gente subió su salario ({inflation}%).`}
+                    className="h-4 w-4 opacity-50"
+                  />
                 </TooltipTrigger>
                 <TooltipContent className="max-w-64" side="left">
-                  Simulamos los valores usando la inflación desde cuando la gente subió su salario (
-                  {inflation}%).
+                  Simulamos los valores usando la inflación desde cuando la gente subió su salario ({inflation}%).
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
@@ -163,19 +169,19 @@ function HomePageClient({
         <TableBody className="scroll-y-auto max-h-[80vh]">
           {salaries.length ? (
             salaries.map(({id, count, currency, seniority, position, value}) => (
-              <TableRow key={id}>
-                <TableCell className="font-medium">{position}</TableCell>
-                <TableCell>{currency}</TableCell>
-                <TableCell>{seniority}</TableCell>
-                <TableCell>
-                  {value.toLocaleString("es-AR", {
-                    style: "currency",
-                    currency,
-                    maximumFractionDigits: 0,
-                  })}
-                </TableCell>
+                <TableRow key={id}>
+                  <TableCell className="font-medium">{position}</TableCell>
+                  <TableCell>{currency}</TableCell>
+                  <TableCell>{seniority}</TableCell>
+                  <TableCell>
+                    {value.toLocaleString("es-AR", {
+                      style: "currency",
+                      currency,
+                      maximumFractionDigits: 0,
+                    })}
+                  </TableCell>
                 <TableCell className="w-[110px] text-right">{count}</TableCell>
-              </TableRow>
+                </TableRow>
             ))
           ) : (
             <TableRow>
