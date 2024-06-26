@@ -58,15 +58,6 @@ function HomePageClient({
     }
   }
 
-  const TOOLTIP_CONTENT_TEXT = `Simulamos los valores tomando el valor original cuando la gente subió su salario (
-    ${dollarPrice.old.toLocaleString("es-AR", {
-      style: "currency",
-      currency: "ARS",
-    })}
-    ) y el valor actual (
-    ${dollarPrice.actual.toLocaleString("es-AR", {style: "currency", currency: "ARS"})}
-    ).`;
-
   return (
     <section className="grid gap-4">
       <nav className="flex items-center justify-between gap-4">
@@ -111,12 +102,30 @@ function HomePageClient({
               <Tooltip>
                 <TooltipTrigger>
                   <HelpCircle
-                    aria-label={`¿Cómo simulamos los salarios? ${TOOLTIP_CONTENT_TEXT}`}
+                    aria-label={`¿Cómo simulamos los salarios? Simulamos los valores tomando el valor original cuando la gente subió su salario (
+    ${dollarPrice.old.toLocaleString("es-AR", {
+      style: "currency",
+      currency: "ARS",
+    })}
+    ) y el valor actual (
+    ${dollarPrice.actual.toLocaleString("es-AR", { style: "currency", currency: "ARS" })}
+    ).`}
                     className="h-4 w-4 opacity-50"
                   />
                 </TooltipTrigger>
                 <TooltipContent className="max-w-64" side="left">
-                  {TOOLTIP_CONTENT_TEXT}
+                  Simulamos los valores tomando el valor original cuando la
+                  gente subió su salario (
+                  {dollarPrice.old.toLocaleString("es-AR", {
+                    style: "currency",
+                    currency: "ARS",
+                  })}
+                  ) y el valor actual (
+                  {dollarPrice.actual.toLocaleString("es-AR", {
+                    style: "currency",
+                    currency: "ARS",
+                  })}
+                  ).
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
@@ -175,19 +184,19 @@ function HomePageClient({
         <TableBody className="scroll-y-auto max-h-[80vh]">
           {salaries.length ? (
             salaries.map(({id, count, currency, seniority, position, value}) => (
-              <TableRow key={id}>
-                <TableCell className="font-medium">{position}</TableCell>
-                <TableCell>{currency}</TableCell>
-                <TableCell>{seniority}</TableCell>
-                <TableCell>
-                  {value.toLocaleString("es-AR", {
-                    style: "currency",
-                    currency,
-                    maximumFractionDigits: 0,
-                  })}
-                </TableCell>
+                <TableRow key={id}>
+                  <TableCell className="font-medium">{position}</TableCell>
+                  <TableCell>{currency}</TableCell>
+                  <TableCell>{seniority}</TableCell>
+                  <TableCell>
+                    {value.toLocaleString("es-AR", {
+                      style: "currency",
+                      currency,
+                      maximumFractionDigits: 0,
+                    })}
+                  </TableCell>
                 <TableCell className="w-[110px] text-right">{count}</TableCell>
-              </TableRow>
+                </TableRow>
             ))
           ) : (
             <TableRow>
