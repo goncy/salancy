@@ -4,9 +4,6 @@ import type {DollarPrice, Filters, MeanSalary, Options, Salary} from "@/types";
 
 import {HelpCircle} from "lucide-react";
 import {useSearchParams} from "next/navigation";
-import dynamic from "next/dynamic";
-
-import HomePageLoading from "./loading";
 
 import {
   Table,
@@ -200,7 +197,7 @@ function HomePageClient({
   );
 }
 
-function HomePageClientContainer({
+export default function HomePageClientContainer({
   salaries,
   dollarPrice,
   options,
@@ -238,8 +235,3 @@ function HomePageClientContainer({
     />
   );
 }
-
-export default dynamic(async () => HomePageClientContainer, {
-  ssr: false,
-  loading: HomePageLoading,
-});
