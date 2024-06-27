@@ -17,7 +17,7 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
     "lucide-react": "^0.302.0",
-    "next": "15.0.0-rc.0",
+    "next": "15.0.0-canary.46",
     "postcss": "^8.4.32",
     "react": "19.0.0-rc-c21bcd627b-20240624",
     "react-dom": "19.0.0-rc-c21bcd627b-20240624",
