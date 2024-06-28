@@ -3,7 +3,7 @@ import HomePageClient from "./page.client";
 import api from "@/api";
 
 // Force static generation
-export const dynamic = "auto";
+export const dynamic = "force-static";
 
 // Revalidate every week
 export const revalidate = 604800;

@@ -1,4 +1,4 @@
-export default function HomeLoading() {
+export default function HomePageLoading() {
   return (
     <div className="my-12 grid place-content-center" role="status">
       <svg
