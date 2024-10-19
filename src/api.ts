@@ -24,7 +24,7 @@ const api = {
         "https://www.dolarito.ar/api/frontend/indices/inflacionMensual",
         {
           headers: {
-            "auth-client": "d57031be4259d66bccf3ec5c675afdee",
+            "auth-client": process.env.DOLARITO_TOKEN!,
           },
         },
       ).then((res) => res.json() as Promise<Record<string, number>>);

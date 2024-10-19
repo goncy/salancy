@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@opentelemetry/api": "^1.9.0",
     "@opentelemetry/api-logs": "^0.52.1",
     "@radix-ui/react-checkbox": "^1.1.0",
     "@radix-ui/react-label": "^2.1.0",
