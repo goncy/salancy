@@ -1,9 +1,9 @@
 import type {DollarPrice, Options, Salary} from "./types";
 
 const api = {
-  dollar: {
-    price: async (): Promise<DollarPrice> => {
-      const dolar = await fetch("https://www.bancoprovincia.com.ar/Principal/Dolar", {
+  dollarPrice: {
+    fetch: async (): Promise<DollarPrice> => {
+      const price = await fetch("https://www.bancoprovincia.com.ar/Principal/Dolar", {
         next: {
           tags: ["dolar"],
         },
@@ -13,7 +13,7 @@ const api = {
 
       return {
         old: Number(process.env.NEXT_PUBLIC_ORIGINAL_DOLLAR_PRICE),
-        actual: Number(dolar),
+        actual: Number(price),
       };
     },
   },
@@ -50,7 +50,7 @@ const api = {
   salary: {
     list: async (): Promise<Salary[]> => {
       // Get list of salaries
-      const csv = await fetch(process.env.SHEETS_URL!, {
+      const csv = await fetch(process.env.NEXT_PUBLIC_SHEET_URL!, {
         next: {
           tags: ["salaries"],
         },

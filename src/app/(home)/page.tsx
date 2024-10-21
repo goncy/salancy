@@ -12,7 +12,7 @@ export default async function Home() {
   // Fetch all data in parallel
   const [salaries, dollarPrice, inflation] = await Promise.all([
     api.salary.list(),
-    api.dollar.price(),
+    api.dollarPrice.fetch(),
     api.inflation.fetch(),
   ]);
 
