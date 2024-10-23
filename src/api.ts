@@ -85,8 +85,8 @@ const api = {
       }
 
       return {
-        positions: Array.from(positions),
-        currencies: Array.from(currencies),
+        positions: Array.from(positions).toSorted((a, b) => a.localeCompare(b)),
+        currencies: Array.from(currencies).toSorted((a, b) => a.localeCompare(b)),
         seniorities: Array.from(seniorities),
       };
     },

@@ -64,6 +64,7 @@ function TableRow({
         "border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted",
         className,
       )}
+      style={{contentVisibility: "auto"}}
       {...props}
     />
   );

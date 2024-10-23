@@ -130,8 +130,16 @@ function HomePageClient({
       </nav>
       <Table className="border">
         <TableCaption>
-          Siempre tomá los valores como referencia y no como un absoluto. {total} salarios
-          reportados.
+          Siempre tomá los valores como referencia y no como un absoluto.{" "}
+          <a
+            className="underline"
+            href={process.env.NEXT_PUBLIC_SHEET_URL}
+            rel="noopener"
+            target="_blank"
+          >
+            {total} salarios reportados
+          </a>
+          .
         </TableCaption>
         <TableHeader>
           <TableRow>
@@ -177,7 +185,7 @@ function HomePageClient({
                 <TableCell className="font-medium">{position}</TableCell>
                 <TableCell>{currency}</TableCell>
                 <TableCell>{seniority}</TableCell>
-                <TableCell>
+                <TableCell className="font-medium">
                   {value.toLocaleString("es-AR", {
                     style: "currency",
                     currency,
