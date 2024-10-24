@@ -2,9 +2,11 @@
 
 import type {DollarPrice, Filters, MeanSalary, Options, Salary} from "@/types";
 
-import {HelpCircle} from "lucide-react";
+//Importing the icon for the functionality
+import {HelpCircle, ArrowUpDown } from "lucide-react";
 import {useSearchParams} from "next/navigation";
 import dynamic from "next/dynamic";
+
 
 import HomePageLoading from "./loading";
 
@@ -147,25 +149,37 @@ function HomePageClient({
               className={cn({underline: filters.sort === "position"}, "min-w-48 cursor-pointer")}
               onClick={() => handleSort("position")}
             >
-              Posición
+            <div className="flex items-center">
+            Posición
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+            </div>
             </TableHead>
             <TableHead
               className={cn({underline: filters.sort === "currency"}, "cursor-pointer")}
               onClick={() => handleSort("currency")}
             >
-              Moneda
+            <div className="flex items-center">
+            Moneda
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+            </div>
             </TableHead>
             <TableHead
               className={cn({underline: filters.sort === "seniority"}, "min-w-48 cursor-pointer")}
               onClick={() => handleSort("seniority")}
             >
-              Seniority
+            <div className="flex items-center">
+            Seniority
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+            </div>
             </TableHead>
             <TableHead
               className={cn({underline: filters.sort === "value"}, "cursor-pointer")}
               onClick={() => handleSort("value")}
             >
-              Salario
+            <div className="flex items-center">
+            Salario
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+            </div>
             </TableHead>
             <TableHead
               className={cn(
@@ -174,7 +188,10 @@ function HomePageClient({
               )}
               onClick={() => handleSort("count")}
             >
-              Reportes
+            <div className="flex items-center">
+            Reportes
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+            </div>
             </TableHead>
           </TableRow>
         </TableHeader>
