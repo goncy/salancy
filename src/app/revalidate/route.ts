@@ -1,6 +1,6 @@
 import type {NextRequest} from "next/server";
 
-import {revalidatePath, revalidateTag} from "next/cache";
+import {revalidateTag} from "next/cache";
 
 export async function POST(request: NextRequest) {
   const params = request.nextUrl.searchParams;
@@ -12,11 +12,7 @@ export async function POST(request: NextRequest) {
     });
   }
 
-  if (params.has("tag")) {
-    revalidateTag(params.get("tag")!);
-  } else {
-    revalidatePath("/");
-  }
+  revalidateTag(params.get("tag") || "/");
 
   return Response.json({revalidated: true});
 }

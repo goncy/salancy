@@ -1,14 +1,14 @@
+import {unstable_cacheTag as cacheTag} from "next/cache";
+
 import HomePageClient from "./page.client";
 
 import api from "@/api";
 
-// Force static generation
-export const dynamic = "force-static";
-
-// Revalidate every week
-export const revalidate = 604800;
-
 export default async function Home() {
+  "use cache";
+
+  cacheTag("/");
+
   // Fetch all data in parallel
   const [salaries, dollarPrice, inflation] = await Promise.all([
     api.salary.list(),

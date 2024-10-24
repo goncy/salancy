@@ -62,9 +62,9 @@ function HomePageClient({
   }
 
   return (
-    <section className="grid gap-4">
+    <section className="grid h-full grid-rows-[auto,1fr] gap-4">
       <nav className="flex w-full flex-col items-center justify-between gap-4 sm:flex-row">
-        <div className="flex w-full flex-col items-center gap-4 sm:flex-row">
+        <div className="flex w-full flex-col items-center gap-2 sm:flex-row md:gap-4">
           <select
             aria-label="Seleccionar las posiciones"
             className="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 sm:w-[180px] [&>span]:line-clamp-1"
@@ -128,82 +128,84 @@ function HomePageClient({
           </Label>
         )}
       </nav>
-      <Table className="border">
-        <TableCaption>
-          Siempre tomá los valores como referencia y no como un absoluto.{" "}
-          <a
-            className="underline"
-            href={process.env.NEXT_PUBLIC_SHEET_URL}
-            rel="noopener"
-            target="_blank"
-          >
-            {total} salarios reportados
-          </a>
-          .
-        </TableCaption>
-        <TableHeader>
-          <TableRow>
-            <TableHead
-              className={cn({underline: filters.sort === "position"}, "min-w-48 cursor-pointer")}
-              onClick={() => handleSort("position")}
+      <div className="relative w-full overflow-auto">
+        <Table className="border">
+          <TableCaption>
+            Siempre tomá los valores como referencia y no como un absoluto.{" "}
+            <a
+              className="underline"
+              href={process.env.NEXT_PUBLIC_SHEET_URL}
+              rel="noopener"
+              target="_blank"
             >
-              Posición
-            </TableHead>
-            <TableHead
-              className={cn({underline: filters.sort === "currency"}, "cursor-pointer")}
-              onClick={() => handleSort("currency")}
-            >
-              Moneda
-            </TableHead>
-            <TableHead
-              className={cn({underline: filters.sort === "seniority"}, "min-w-48 cursor-pointer")}
-              onClick={() => handleSort("seniority")}
-            >
-              Seniority
-            </TableHead>
-            <TableHead
-              className={cn({underline: filters.sort === "value"}, "cursor-pointer")}
-              onClick={() => handleSort("value")}
-            >
-              Salario
-            </TableHead>
-            <TableHead
-              className={cn(
-                {underline: filters.sort === "count"},
-                "w-[110px] cursor-pointer text-right",
-              )}
-              onClick={() => handleSort("count")}
-            >
-              Reportes
-            </TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody className="scroll-y-auto max-h-[80vh]">
-          {salaries.length ? (
-            salaries.map(({id, count, currency, seniority, position, value}) => (
-              <TableRow key={id}>
-                <TableCell className="font-medium">{position}</TableCell>
-                <TableCell>{currency}</TableCell>
-                <TableCell>{seniority}</TableCell>
-                <TableCell className="font-medium">
-                  {value.toLocaleString("es-AR", {
-                    style: "currency",
-                    currency,
-                    maximumFractionDigits: 0,
-                  })}
-                </TableCell>
-                <TableCell className="w-[110px] text-right">{count}</TableCell>
-              </TableRow>
-            ))
-          ) : (
+              {total} salarios reportados
+            </a>
+            .
+          </TableCaption>
+          <TableHeader>
             <TableRow>
-              <TableCell className="text-center text-muted-foreground" colSpan={5}>
-                No hay salarios que coincidan con los filtros
-              </TableCell>
+              <TableHead
+                className={cn({underline: filters.sort === "position"}, "min-w-48 cursor-pointer")}
+                onClick={() => handleSort("position")}
+              >
+                Posición
+              </TableHead>
+              <TableHead
+                className={cn({underline: filters.sort === "currency"}, "cursor-pointer")}
+                onClick={() => handleSort("currency")}
+              >
+                Moneda
+              </TableHead>
+              <TableHead
+                className={cn({underline: filters.sort === "seniority"}, "min-w-48 cursor-pointer")}
+                onClick={() => handleSort("seniority")}
+              >
+                Seniority
+              </TableHead>
+              <TableHead
+                className={cn({underline: filters.sort === "value"}, "cursor-pointer")}
+                onClick={() => handleSort("value")}
+              >
+                Salario
+              </TableHead>
+              <TableHead
+                className={cn(
+                  {underline: filters.sort === "count"},
+                  "w-[110px] cursor-pointer text-right",
+                )}
+                onClick={() => handleSort("count")}
+              >
+                Reportes
+              </TableHead>
             </TableRow>
-          )}
-        </TableBody>
-      </Table>
+          </TableHeader>
+          <TableBody className="scroll-y-auto max-h-[80vh]">
+            {salaries.length ? (
+              salaries.map(({id, count, currency, seniority, position, value}) => (
+                <TableRow key={id}>
+                  <TableCell className="font-medium">{position}</TableCell>
+                  <TableCell>{currency}</TableCell>
+                  <TableCell>{seniority}</TableCell>
+                  <TableCell className="font-medium">
+                    {value.toLocaleString("es-AR", {
+                      style: "currency",
+                      currency,
+                      maximumFractionDigits: 0,
+                    })}
+                  </TableCell>
+                  <TableCell className="w-[110px] text-right">{count}</TableCell>
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell className="text-center text-muted-foreground" colSpan={5}>
+                  No hay salarios que coincidan con los filtros
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </div>
     </section>
   );
 }

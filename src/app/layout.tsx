@@ -1,6 +1,7 @@
 import type {Metadata} from "next";
 
 import "./globals.css";
+import api from "@/api";
 
 export const metadata: Metadata = {
   title: "Salancy",
@@ -10,13 +11,17 @@ export const metadata: Metadata = {
     "Fijate si tu salario está en valor de mercado. Recordá tomar los valores como referencia y no como un absoluto. Esta aplicación toma más de 500 respuestas de gente de la comunidad acerca de sus salarios, de forma anónima, para distintas posiciones.",
 };
 
-export default function RootLayout({children}: {children: React.ReactNode}) {
+export default async function RootLayout({children}: {children: React.ReactNode}) {
+  "use cache";
+
+  const total = await api.salary.list().then((salaries) => salaries.length);
+
   return (
     <html lang="en">
-      <body className="dark container m-auto grid min-h-screen grid-rows-[auto,1fr,auto] gap-4 bg-background px-4 font-sans antialiased md:gap-8">
-        <header className="text-xl font-bold leading-[4rem]">Salancy</header>
-        <main>{children}</main>
-        <footer className="flex min-h-16 items-center justify-center text-center text-foreground">
+      <body className="dark container m-auto grid h-screen grid-rows-[auto,1fr,auto] gap-2 overflow-hidden bg-background px-4 font-sans antialiased md:gap-4">
+        <header className="text-xl font-bold leading-[3rem] md:leading-[4rem]">Salancy</header>
+        <main className="overflow-auto">{children}</main>
+        <footer className="flex min-h-16 items-center justify-center text-balance text-center text-sm text-muted-foreground">
           <p>
             <a className="underline" href="https://github.com/goncy/salancy">
               Salancy
@@ -24,8 +29,17 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
             fue hecho con 🖤 por{" "}
             <a className="underline" href="https://goncy.dev">
               Goncy
-            </a>{" "}
-            - Página actualizada al {new Date().toLocaleString("es-AR")}.
+            </a>
+            . Actualizado al {new Date().toLocaleString("es-AR", {dateStyle: "short"})} con{" "}
+            <a
+              className="underline"
+              href={process.env.NEXT_PUBLIC_SHEET_URL}
+              rel="noopener"
+              target="_blank"
+            >
+              {total} salarios reportados
+            </a>
+            .
           </p>
         </footer>
       </body>

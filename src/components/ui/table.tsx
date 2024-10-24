@@ -7,11 +7,7 @@ function Table({
   ref,
   ...props
 }: {ref?: React.Ref<HTMLTableElement>} & React.TableHTMLAttributes<HTMLTableElement>) {
-  return (
-    <div className="relative w-full overflow-auto">
-      <table ref={ref} className={cn("w-full caption-bottom text-sm", className)} {...props} />
-    </div>
-  );
+  return <table ref={ref} className={cn("w-full caption-bottom text-sm", className)} {...props} />;
 }
 
 Table.displayName = "Table";
