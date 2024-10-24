@@ -5,8 +5,8 @@ Promedio de salarios en IT, administrado via Google Sheets.
 ## Como la uso?
 
 1. Crea una copia de [esta planilla de calculo](https://docs.google.com/spreadsheets/d/1T4bKoTOQQecslHno4R_8zIXCnjGjiStnh0VkBl9eMa0/edit?usp=sharing).
-2. Una vez copiada, toca en `Archivo > Publicar en la web`, selecciona `Valores separados por comas (.csv)` del desplegable y clickea en `publicar`.
-3. Asegurate que en vez de `Pagina web` diga `Valores separados por comas (.tsv)` y copia el enlace.
+2. Una vez copiada, toca en `Archivo > Compartir > Publicar en la web`.
+3. En el dropdown cambia `Pagina web` por `Valores separados por comas (.csv)` y clickea en `publicar` luego copiá el enlace.
 4. Pega el enlace en un archivo `.env` en la variable `NEXT_PUBLIC_SHEET_URL`.
 5. Publica el sitio en [algun hosting que soporte NextJS](https://vercel.com)
 
