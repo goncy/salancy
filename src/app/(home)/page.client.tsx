@@ -8,15 +8,7 @@ import dynamic from "next/dynamic";
 
 import HomePageLoading from "./loading";
 
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import {Checkbox} from "@/components/ui/checkbox";
 import {Label} from "@/components/ui/label";
 import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from "@/components/ui/tooltip";
@@ -29,14 +21,12 @@ function HomePageClient({
   dollarPrice,
   filters,
   options,
-  total,
 }: {
   salaries: MeanSalary[];
   inflation: number;
   dollarPrice: DollarPrice;
   filters: Filters;
   options: Options;
-  total: number;
 }) {
   function handleFilter(key: string, value: string) {
     // Create new search params
@@ -130,18 +120,6 @@ function HomePageClient({
       </nav>
       <div className="relative w-full overflow-auto">
         <Table className="border">
-          <TableCaption>
-            Siempre tomá los valores como referencia y no como un absoluto.{" "}
-            <a
-              className="underline"
-              href={process.env.NEXT_PUBLIC_SHEET_URL}
-              rel="noopener"
-              target="_blank"
-            >
-              {total} salarios reportados
-            </a>
-            .
-          </TableCaption>
           <TableHeader>
             <TableRow>
               <TableHead
@@ -244,7 +222,6 @@ function HomePageClientContainer({
       inflation={inflation}
       options={options}
       salaries={meanSalaries}
-      total={salaries.length}
     />
   );
 }
