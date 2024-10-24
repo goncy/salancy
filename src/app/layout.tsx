@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   keywords:
     "salario, sueldo, remuneración, valor de mercado, valoración, programación, frontend, backend, react, angular, vue, ux, ui, glassdoor, ilovemondays",
   description:
-    "Fijate si tu salario está en valor de mercado. Recordá tomar los valores como referencia y no como un absoluto. Esta aplicación toma más de 500 respuestas de gente de la comunidad acerca de sus salarios, de forma anónima, para distintas posiciones.",
+    "Fijate si tu salario está en valor de mercado. Recordá tomar los valores como referencia y no como un absoluto. Esta aplicación toma más de 1500 respuestas de gente de la comunidad acerca de sus salarios, de forma anónima, para distintas posiciones.",
 };
 
 export default async function RootLayout({children}: {children: React.ReactNode}) {
