@@ -3,6 +3,7 @@ import type {Metadata} from "next";
 import {unstable_cacheLife as cacheLife, unstable_cacheTag as cacheTag} from "next/cache";
 
 import api from "@/api";
+
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -16,7 +17,7 @@ export const metadata: Metadata = {
 export default async function RootLayout({children}: {children: React.ReactNode}) {
   "use cache";
 
-  cacheLife("max");
+  cacheLife("biweekly");
   cacheTag("/");
 
   const total = await api.salary.list().then((salaries) => salaries.length);
