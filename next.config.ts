@@ -6,9 +6,9 @@ const nextConfig: NextConfig = {
     reactCompiler: true,
     dynamicIO: true,
     cacheLife: {
-      biweekly: {
-        stale: 60 * 60 * 24 * 14,
-        revalidate: 60 * 60 * 24 * 14,
+      months: {
+        stale: 60 * 60 * 24 * 30,
+        revalidate: 60 * 60 * 24 * 30,
         expire: INFINITE_CACHE,
       },
     },

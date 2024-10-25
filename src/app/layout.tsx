@@ -17,7 +17,7 @@ export const metadata: Metadata = {
 export default async function RootLayout({children}: {children: React.ReactNode}) {
   "use cache";
 
-  cacheLife("biweekly");
+  cacheLife("months");
   cacheTag("/");
 
   const total = await api.salary.list().then((salaries) => salaries.length);

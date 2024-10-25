@@ -3,11 +3,7 @@ import type {DollarPrice, Options, Salary} from "./types";
 const api = {
   dollarPrice: {
     fetch: async (): Promise<DollarPrice> => {
-      const price = await fetch("https://www.bancoprovincia.com.ar/Principal/Dolar", {
-        next: {
-          tags: ["dolar"],
-        },
-      })
+      const price = await fetch("https://www.bancoprovincia.com.ar/Principal/Dolar")
         .then((res) => res.json() as Promise<[string, string, string]>)
         .then(([, value]) => value);
 
@@ -50,11 +46,7 @@ const api = {
   salary: {
     list: async (): Promise<Salary[]> => {
       // Get list of salaries
-      const csv = await fetch(process.env.NEXT_PUBLIC_SHEET_URL!, {
-        next: {
-          tags: ["salaries"],
-        },
-      }).then((res) => res.text());
+      const csv = await fetch(process.env.NEXT_PUBLIC_SHEET_URL!).then((res) => res.text());
 
       // Convert from csv row to salary
       return csv

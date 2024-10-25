@@ -7,7 +7,7 @@ import api from "@/api";
 export default async function Home() {
   "use cache";
 
-  cacheLife("biweekly");
+  cacheLife("months");
   cacheTag("/");
 
   // Fetch all data in parallel
