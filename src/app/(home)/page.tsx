@@ -1,4 +1,4 @@
-import {unstable_cacheTag as cacheTag} from "next/cache";
+import {unstable_cacheTag as cacheTag, unstable_cacheLife as cacheLife} from "next/cache";
 
 import HomePageClient from "./page.client";
 
@@ -7,6 +7,7 @@ import api from "@/api";
 export default async function Home() {
   "use cache";
 
+  cacheLife("max");
   cacheTag("/");
 
   // Fetch all data in parallel

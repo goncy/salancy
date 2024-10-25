@@ -1,7 +1,9 @@
 import type {Metadata} from "next";
 
-import "./globals.css";
+import {unstable_cacheLife as cacheLife} from "next/cache";
+
 import api from "@/api";
+import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Salancy",
@@ -13,6 +15,7 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({children}: {children: React.ReactNode}) {
   "use cache";
+  cacheLife("max");
 
   const total = await api.salary.list().then((salaries) => salaries.length);
 
