@@ -13,7 +13,7 @@ import {Checkbox} from "@/components/ui/checkbox";
 import {Label} from "@/components/ui/label";
 import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from "@/components/ui/tooltip";
 import {cn} from "@/lib/utils";
-import {sortMeanSalaries} from "@/utils";
+import {filterMeanSalaries, sortMeanSalaries} from "@/utils";
 
 function HomePageClient({
   salaries,
@@ -233,7 +233,8 @@ function HomePageClientContainer({
   };
 
   // Get filtered mean salaries
-  const sortedSalaries = sortMeanSalaries(salaries, filters);
+  const filteredSalaries = filterMeanSalaries(salaries, filters);
+  const sortedSalaries = sortMeanSalaries(filteredSalaries, filters);
 
   return (
     <HomePageClient

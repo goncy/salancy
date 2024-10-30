@@ -75,6 +75,16 @@ export function sortMeanSalaries(meanSalaries: MeanSalary[], filters: Filters): 
   });
 }
 
+export function filterMeanSalaries(salaries: MeanSalary[], filters: Filters): MeanSalary[] {
+  return salaries.filter((salary) => {
+    return (
+      salary.position.toLowerCase().includes(filters.position.toLowerCase()) &&
+      salary.currency.toLowerCase().includes(filters.currency.toLowerCase()) &&
+      salary.seniority.toLowerCase().includes(filters.seniority.toLowerCase())
+    );
+  });
+}
+
 export function calculateOptions(salaries: MeanSalary[]): Options {
   const positions = new Set<MeanSalary["position"]>();
   const currencies = new Set<MeanSalary["currency"]>();
