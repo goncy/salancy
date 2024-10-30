@@ -1,4 +1,4 @@
-import type {DollarPrice, Options, Salary} from "./types";
+import type {DollarPrice, RawSalary} from "./types";
 
 const api = {
   dollarPrice: {
@@ -44,7 +44,7 @@ const api = {
     },
   },
   salary: {
-    list: async (): Promise<Salary[]> => {
+    list: async (): Promise<RawSalary[]> => {
       // Get list of salaries
       const csv = await fetch(process.env.NEXT_PUBLIC_SHEET_URL!).then((res) => res.text());
 
@@ -57,30 +57,11 @@ const api = {
 
           return {
             position: position.trim(),
-            currency: currency.trim() as Salary["currency"],
+            currency: currency.trim() as RawSalary["currency"],
             value: parseInt(value),
             seniority: seniority.trim(),
           };
         });
-    },
-  },
-  options: {
-    list: async (salaries: Salary[]): Promise<Options> => {
-      const positions = new Set<Salary["position"]>();
-      const currencies = new Set<Salary["currency"]>();
-      const seniorities = new Set<Salary["seniority"]>();
-
-      for (const {position, currency, seniority} of salaries) {
-        positions.add(position);
-        currencies.add(currency);
-        seniorities.add(seniority);
-      }
-
-      return {
-        positions: Array.from(positions).toSorted((a, b) => a.localeCompare(b)),
-        currencies: Array.from(currencies).toSorted((a, b) => a.localeCompare(b)),
-        seniorities: Array.from(seniorities),
-      };
     },
   },
 };

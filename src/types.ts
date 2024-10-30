@@ -1,8 +1,14 @@
-export interface Salary {
+export interface RawSalary {
   position: string;
+  seniority: string;
   currency: "USD" | "ARS";
   value: number;
-  seniority: string;
+}
+
+export interface Salary extends Omit<RawSalary, "value"> {
+  arsOriginalValue: number;
+  usdOriginalValue: number;
+  arsSimulatedValue: number;
 }
 
 export interface MeanSalary extends Salary {
@@ -20,7 +26,7 @@ export interface Filters {
   position: string;
   currency: string;
   seniority: string;
-  sort: keyof MeanSalary;
+  sort: "position" | "seniority" | "currency" | "value" | "count";
   simulate: boolean;
   direction: "asc" | "desc";
 }

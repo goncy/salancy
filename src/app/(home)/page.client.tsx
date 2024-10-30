@@ -1,6 +1,6 @@
 "use client";
 
-import type {DollarPrice, Filters, MeanSalary, Options, Salary} from "@/types";
+import type {DollarPrice, Filters, MeanSalary, Options} from "@/types";
 
 import {HelpCircle} from "lucide-react";
 import {useSearchParams} from "next/navigation";
@@ -13,7 +13,7 @@ import {Checkbox} from "@/components/ui/checkbox";
 import {Label} from "@/components/ui/label";
 import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from "@/components/ui/tooltip";
 import {cn} from "@/lib/utils";
-import {getMeanSalaries} from "@/utils";
+import {sortMeanSalaries} from "@/utils";
 
 function HomePageClient({
   salaries,
@@ -43,7 +43,7 @@ function HomePageClient({
     window.history.pushState(null, "", `?${params.toString()}`);
   }
 
-  function handleSort(order: keyof MeanSalary) {
+  function handleSort(order: Filters["sort"]) {
     if (order === filters.sort) {
       handleFilter("direction", filters.direction === "asc" ? "desc" : "asc");
     } else {
@@ -159,21 +159,41 @@ function HomePageClient({
           </TableHeader>
           <TableBody className="scroll-y-auto max-h-[80vh]">
             {salaries.length ? (
-              salaries.map(({id, count, currency, seniority, position, value}) => (
-                <TableRow key={id}>
-                  <TableCell className="font-medium">{position}</TableCell>
-                  <TableCell>{currency}</TableCell>
-                  <TableCell>{seniority}</TableCell>
-                  <TableCell className="font-medium">
-                    {value.toLocaleString("es-AR", {
-                      style: "currency",
-                      currency,
-                      maximumFractionDigits: 0,
-                    })}
-                  </TableCell>
-                  <TableCell className="w-[110px] text-right">{count}</TableCell>
-                </TableRow>
-              ))
+              salaries.map(
+                ({
+                  id,
+                  count,
+                  currency,
+                  seniority,
+                  position,
+                  arsOriginalValue,
+                  arsSimulatedValue,
+                  usdOriginalValue,
+                }) => {
+                  const value =
+                    currency === "ARS"
+                      ? filters.simulate
+                        ? arsSimulatedValue
+                        : arsOriginalValue
+                      : usdOriginalValue;
+
+                  return (
+                    <TableRow key={id}>
+                      <TableCell className="font-medium">{position}</TableCell>
+                      <TableCell>{currency}</TableCell>
+                      <TableCell>{seniority}</TableCell>
+                      <TableCell className="font-medium">
+                        {value.toLocaleString("es-AR", {
+                          style: "currency",
+                          currency,
+                          maximumFractionDigits: 0,
+                        })}
+                      </TableCell>
+                      <TableCell className="w-[110px] text-right">{count}</TableCell>
+                    </TableRow>
+                  );
+                },
+              )
             ) : (
               <TableRow>
                 <TableCell className="text-center text-muted-foreground" colSpan={5}>
@@ -194,7 +214,7 @@ function HomePageClientContainer({
   options,
   inflation,
 }: {
-  salaries: Salary[];
+  salaries: MeanSalary[];
   options: Options;
   dollarPrice: DollarPrice;
   inflation: number;
@@ -207,13 +227,13 @@ function HomePageClientContainer({
     position: searchParams.get("position") || "",
     currency: searchParams.get("currency") || "",
     seniority: searchParams.get("seniority") || "",
-    sort: (searchParams.get("sort") as null | keyof MeanSalary) || "position",
+    sort: (searchParams.get("sort") as Filters["sort"]) || "position",
     simulate: searchParams.get("simulate") !== "false",
     direction: (searchParams.get("direction") as "asc" | "desc" | null) || "asc",
   };
 
   // Get filtered mean salaries
-  const meanSalaries = getMeanSalaries(salaries, filters, dollarPrice, inflation);
+  const sortedSalaries = sortMeanSalaries(salaries, filters);
 
   return (
     <HomePageClient
@@ -221,7 +241,7 @@ function HomePageClientContainer({
       filters={filters}
       inflation={inflation}
       options={options}
-      salaries={meanSalaries}
+      salaries={sortedSalaries}
     />
   );
 }

@@ -3,6 +3,7 @@ import {unstable_cacheTag as cacheTag, unstable_cacheLife as cacheLife} from "ne
 import HomePageClient from "./page.client";
 
 import api from "@/api";
+import {calculateMeanSalaries, calculateOptions} from "@/utils";
 
 export default async function Home() {
   "use cache";
@@ -17,15 +18,18 @@ export default async function Home() {
     api.inflation.fetch(),
   ]);
 
+  // Convert salaries to mean salaries
+  const meanSalaries = calculateMeanSalaries(salaries, dollarPrice, inflation);
+
   // This one not just depends on salaries but it's not an actual external call
-  const options = await api.options.list(salaries);
+  const options = calculateOptions(meanSalaries);
 
   return (
     <HomePageClient
       dollarPrice={dollarPrice}
       inflation={inflation}
       options={options}
-      salaries={salaries}
+      salaries={meanSalaries}
     />
   );
 }

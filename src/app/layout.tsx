@@ -26,7 +26,7 @@ export default async function RootLayout({children}: {children: React.ReactNode}
     <html lang="en">
       <body className="dark container m-auto grid h-screen grid-rows-[auto,1fr,auto] gap-2 overflow-hidden bg-background px-4 font-sans antialiased md:gap-4">
         <header className="text-xl font-bold leading-[3rem] md:leading-[4rem]">Salancy</header>
-        <main className="overflow-auto">{children}</main>
+        <main className="overflow-hidden">{children}</main>
         <footer className="flex min-h-16 items-center justify-center text-balance text-center text-sm text-muted-foreground">
           <p>
             <a className="underline" href="https://github.com/goncy/salancy">
