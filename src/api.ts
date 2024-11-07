@@ -3,9 +3,15 @@ import type {DollarPrice, RawSalary} from "./types";
 const api = {
   dollarPrice: {
     fetch: async (): Promise<DollarPrice> => {
-      const price = await fetch("https://www.bancoprovincia.com.ar/Principal/Dolar")
-        .then((res) => res.json() as Promise<[string, string, string]>)
-        .then(([, value]) => value);
+      const price = await fetch("https://www.dolarito.ar/api/frontend/quotations/dolar", {
+        headers: {
+          "auth-client": process.env.DOLARITO_TOKEN!,
+        },
+      })
+        .then(
+          (res) => res.json() as Promise<Record<string, {name: string; buy: number; sell: number}>>,
+        )
+        .then((prices) => prices["oficial"].sell);
 
       return {
         old: Number(process.env.NEXT_PUBLIC_ORIGINAL_DOLLAR_PRICE),
