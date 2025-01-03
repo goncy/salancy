@@ -16,18 +16,13 @@ export interface MeanSalary extends Salary {
   count: number;
 }
 
-export interface Options {
-  positions: Salary["position"][];
-  currencies: Salary["currency"][];
-  seniorities: Salary["seniority"][];
-}
-
 export interface Filters {
   position: string;
   currency: string;
   seniority: string;
   sort: "position" | "seniority" | "currency" | "value" | "count";
   simulate: boolean;
+  trusted: boolean;
   direction: "asc" | "desc";
 }
 

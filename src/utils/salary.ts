@@ -1,4 +1,4 @@
-import type {DollarPrice, Filters, MeanSalary, Options, RawSalary} from "./types";
+import type {DollarPrice, Filters, MeanSalary, RawSalary} from "@/types";
 
 export function calculateMeanSalaries(
   salaries: RawSalary[],
@@ -77,28 +77,35 @@ export function sortMeanSalaries(meanSalaries: MeanSalary[], filters: Filters): 
 
 export function filterMeanSalaries(salaries: MeanSalary[], filters: Filters): MeanSalary[] {
   return salaries.filter((salary) => {
-    return (
-      salary.position.toLowerCase().includes(filters.position.toLowerCase()) &&
-      salary.currency.toLowerCase().includes(filters.currency.toLowerCase()) &&
-      salary.seniority.toLowerCase().includes(filters.seniority.toLowerCase())
-    );
+    // Filter by position
+    if (
+      filters.position &&
+      !salary.position.toLowerCase().includes(filters.position.toLowerCase())
+    ) {
+      return false;
+    }
+
+    // Filter by currency
+    if (
+      filters.currency &&
+      !salary.currency.toLowerCase().includes(filters.currency.toLowerCase())
+    ) {
+      return false;
+    }
+
+    // Filter by seniority
+    if (
+      filters.seniority &&
+      !salary.seniority.toLowerCase().includes(filters.seniority.toLowerCase())
+    ) {
+      return false;
+    }
+
+    // Filter salaries with trusted count
+    if (filters.trusted && salary.count < 3) {
+      return false;
+    }
+
+    return true;
   });
-}
-
-export function calculateOptions(salaries: MeanSalary[]): Options {
-  const positions = new Set<MeanSalary["position"]>();
-  const currencies = new Set<MeanSalary["currency"]>();
-  const seniorities = new Set<MeanSalary["seniority"]>();
-
-  for (const {position, currency, seniority} of salaries) {
-    positions.add(position);
-    currencies.add(currency);
-    seniorities.add(seniority);
-  }
-
-  return {
-    positions: Array.from(positions).toSorted((a, b) => a.localeCompare(b)),
-    currencies: Array.from(currencies).toSorted((a, b) => a.localeCompare(b)),
-    seniorities: Array.from(seniorities).toSorted((a, b) => a.localeCompare(b)),
-  };
 }

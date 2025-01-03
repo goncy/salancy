@@ -143,7 +143,7 @@ export default [
           ],
           pathGroups: [
             {
-              pattern: "~/**",
+              pattern: "@/**",
               group: "external",
               position: "after",
             },

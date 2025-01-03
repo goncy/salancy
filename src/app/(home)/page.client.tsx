@@ -1,121 +1,28 @@
 "use client";
 
-import type {Filters, MeanSalary, Options} from "@/types";
-
-import {HelpCircle} from "lucide-react";
-import {useSearchParams} from "next/navigation";
 import dynamic from "next/dynamic";
+
+import type {Filters, MeanSalary} from "@/types";
+import {cn} from "@/lib/utils";
+import {filterMeanSalaries, sortMeanSalaries} from "@/utils/salary";
+import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
+import {useFilters} from "@/hooks/use-filters";
 
 import HomePageLoading from "./loading";
 
-import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
-import {Checkbox} from "@/components/ui/checkbox";
-import {Label} from "@/components/ui/label";
-import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from "@/components/ui/tooltip";
-import {cn} from "@/lib/utils";
-import {filterMeanSalaries, sortMeanSalaries} from "@/utils";
-
-function HomePageClient({
-  salaries,
-  inflation,
-  filters,
-  options,
-}: {
-  salaries: MeanSalary[];
-  inflation: number;
-  filters: Filters;
-  options: Options;
-}) {
-  function handleFilter(key: string, value: string) {
-    // Create new search params
-    const params = new URLSearchParams(window.location.search);
-
-    // Update or remove the value changed
-    if (value) {
-      params.set(key, value);
-    } else {
-      params.delete(key);
-    }
-
-    // As there is no server-side stuff going on, we can just update the URL without reloading
-    window.history.pushState(null, "", `?${params.toString()}`);
-  }
+function HomePageClient({salaries, filters}: {salaries: MeanSalary[]; filters: Filters}) {
+  const [, setFilter] = useFilters();
 
   function handleSort(order: Filters["sort"]) {
     if (order === filters.sort) {
-      handleFilter("direction", filters.direction === "asc" ? "desc" : "asc");
+      setFilter("direction", filters.direction === "asc" ? "desc" : "asc");
     } else {
-      handleFilter("sort", order);
+      setFilter("sort", order);
     }
   }
 
   return (
     <section className="grid h-full grid-rows-[auto,1fr] gap-4">
-      <nav className="flex w-full flex-col items-center justify-between gap-4 sm:flex-row">
-        <div className="flex w-full flex-col items-center gap-2 sm:flex-row md:gap-4">
-          <select
-            aria-label="Seleccionar las posiciones"
-            className="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 sm:w-[180px] [&>span]:line-clamp-1"
-            defaultValue={filters.position}
-            onChange={(e) => handleFilter("position", e.target.value)}
-          >
-            <option value="">Todas las posiciones</option>
-            {options.positions.map((position) => (
-              <option key={position}>{position}</option>
-            ))}
-          </select>
-          <select
-            aria-label="Seleccionar las monedas"
-            className="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 sm:w-[180px] [&>span]:line-clamp-1"
-            defaultValue={filters.currency}
-            onChange={(e) => handleFilter("currency", e.target.value)}
-          >
-            <option value="">Todas las monedas</option>
-            {options.currencies.map((currency) => (
-              <option key={currency}>{currency}</option>
-            ))}
-          </select>
-          <select
-            aria-label="Seleccionar los seniorities"
-            className="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 sm:w-[180px] [&>span]:line-clamp-1"
-            defaultValue={filters.seniority}
-            onChange={(e) => handleFilter("seniority", e.target.value)}
-          >
-            <option value="">Todos los seniorities</option>
-            {options.seniorities.map((seniority) => (
-              <option key={seniority}>{seniority}</option>
-            ))}
-          </select>
-        </div>
-        {inflation > 0 && (
-          <Label
-            className="flex w-full items-center justify-center gap-2 sm:justify-end"
-            htmlFor="simulate"
-          >
-            <Checkbox
-              aria-label="Simular salarios actualizados"
-              defaultChecked={filters.simulate}
-              id="simulate"
-              onCheckedChange={(checked) => handleFilter("simulate", String(checked))}
-            />
-            Simular salarios actualizados
-            <TooltipProvider delayDuration={100}>
-              <Tooltip>
-                <TooltipTrigger>
-                  <HelpCircle
-                    aria-label="Simulamos los valores usando la inflación desde cuando la gente subió su salario ({inflation}%)."
-                    className="h-4 w-4 opacity-50"
-                  />
-                </TooltipTrigger>
-                <TooltipContent className="max-w-64" side="left">
-                  Simulamos los valores usando la inflación desde cuando la gente subió su salario (
-                  {inflation}%).
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          </Label>
-        )}
-      </nav>
       {salaries.length > 0 ? (
         <div className="relative w-full overflow-auto">
           <Table className="border">
@@ -194,7 +101,7 @@ function HomePageClient({
                         })}
                       </TableCell>
                       <TableCell className="flex w-[110px] items-center justify-end gap-1.5 text-right">
-                        <span className={cn({"text-warning": count < 3})}>{count}</span>
+                        <span>{count}</span>
                       </TableCell>
                     </TableRow>
                   );
@@ -214,43 +121,14 @@ function HomePageClient({
   );
 }
 
-function HomePageClientContainer({
-  salaries,
-  options,
-  inflation,
-}: {
-  salaries: MeanSalary[];
-  options: Options;
-  inflation: number;
-}) {
-  // Get search params from a client component to avoid busting the server cache in every request
-  const searchParams = useSearchParams();
-
-  // Only show the simulate option if the inflation difference is greater than 5%
-  const hasSignificantInflation = Math.abs(inflation) > 5;
-
-  // Get filters from params
-  const filters: Filters = {
-    position: searchParams.get("position") || "",
-    currency: searchParams.get("currency") || "",
-    seniority: searchParams.get("seniority") || "",
-    sort: (searchParams.get("sort") as Filters["sort"]) || "position",
-    simulate: hasSignificantInflation ? searchParams.get("simulate") !== "false" : false,
-    direction: (searchParams.get("direction") as "asc" | "desc" | null) || "asc",
-  };
+function HomePageClientContainer({salaries}: {salaries: MeanSalary[]}) {
+  const [filters] = useFilters();
 
   // Get filtered mean salaries
   const filteredSalaries = filterMeanSalaries(salaries, filters);
   const sortedSalaries = sortMeanSalaries(filteredSalaries, filters);
 
-  return (
-    <HomePageClient
-      filters={filters}
-      inflation={hasSignificantInflation ? inflation : 0}
-      options={options}
-      salaries={sortedSalaries}
-    />
-  );
+  return <HomePageClient filters={filters} salaries={sortedSalaries} />;
 }
 
 export default dynamic(async () => HomePageClientContainer, {

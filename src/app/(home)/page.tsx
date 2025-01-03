@@ -1,9 +1,8 @@
 import {unstable_cacheTag as cacheTag, unstable_cacheLife as cacheLife} from "next/cache";
 
-import HomePageClient from "./page.client";
-
 import api from "@/api";
-import {calculateMeanSalaries, calculateOptions} from "@/utils";
+
+import HomePageClient from "./page.client";
 
 export default async function Home() {
   "use cache";
@@ -11,18 +10,7 @@ export default async function Home() {
   cacheLife("months");
   cacheTag("/");
 
-  // Fetch all data in parallel
-  const [salaries, dollarPrice, inflation] = await Promise.all([
-    api.salary.list(),
-    api.dollarPrice.fetch(),
-    api.inflation.fetch(),
-  ]);
+  const salaries = await api.salary.mean.list();
 
-  // Convert salaries to mean salaries
-  const meanSalaries = calculateMeanSalaries(salaries, dollarPrice, inflation);
-
-  // This one not just depends on salaries but it's not an actual external call
-  const options = calculateOptions(meanSalaries);
-
-  return <HomePageClient inflation={inflation} options={options} salaries={meanSalaries} />;
+  return <HomePageClient salaries={salaries} />;
 }

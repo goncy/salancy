@@ -1,4 +1,8 @@
-import type {DollarPrice, RawSalary} from "./types";
+import type {DollarPrice, MeanSalary, RawSalary, Salary} from "./types";
+
+import {unstable_cacheLife as cacheLife, unstable_cacheTag as cacheTag} from "next/cache";
+
+import {calculateMeanSalaries} from "@/utils/salary";
 
 const api = {
   dollarPrice: {
@@ -51,6 +55,11 @@ const api = {
   },
   salary: {
     list: async (): Promise<RawSalary[]> => {
+      "use cache";
+
+      cacheLife("months");
+      cacheTag("salary");
+
       // Get list of salaries
       const csv = await fetch(process.env.NEXT_PUBLIC_SHEET_URL!).then((res) => res.text());
 
@@ -67,7 +76,35 @@ const api = {
             value: parseInt(value),
             seniority: seniority.trim(),
           };
-        });
+        }) as RawSalary[];
+    },
+    mean: {
+      list: async (): Promise<MeanSalary[]> => {
+        const rawSalaries = await api.salary.list();
+        const dollarPrice = await api.dollarPrice.fetch();
+        const inflation = await api.inflation.fetch();
+
+        return calculateMeanSalaries(rawSalaries, dollarPrice, inflation);
+      },
+    },
+    metadata: async () => {
+      const salaries = await api.salary.list();
+
+      const positions = new Set<Salary["position"]>();
+      const currencies = new Set<Salary["currency"]>();
+      const seniorities = new Set<Salary["seniority"]>();
+
+      for (const {position, currency, seniority} of salaries) {
+        positions.add(position);
+        currencies.add(currency);
+        seniorities.add(seniority);
+      }
+
+      return {
+        positions: Array.from(positions).toSorted((a, b) => a.localeCompare(b)),
+        currencies: Array.from(currencies).toSorted((a, b) => a.localeCompare(b)),
+        seniorities: Array.from(seniorities).toSorted((a, b) => a.localeCompare(b)),
+      };
     },
   },
 };
