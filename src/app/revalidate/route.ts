@@ -2,7 +2,7 @@ import type {NextRequest} from "next/server";
 
 import {revalidateTag} from "next/cache";
 
-export async function POST(request: NextRequest) {
+export async function GET(request: NextRequest) {
   const params = request.nextUrl.searchParams;
 
   if (params.get("secret") !== process.env.SECRET) {

@@ -24,12 +24,5 @@ export default async function Home() {
   // This one not just depends on salaries but it's not an actual external call
   const options = calculateOptions(meanSalaries);
 
-  return (
-    <HomePageClient
-      dollarPrice={dollarPrice}
-      inflation={inflation}
-      options={options}
-      salaries={meanSalaries}
-    />
-  );
+  return <HomePageClient inflation={inflation} options={options} salaries={meanSalaries} />;
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import type {DollarPrice, Filters, MeanSalary, Options} from "@/types";
+import type {Filters, MeanSalary, Options} from "@/types";
 
 import {HelpCircle} from "lucide-react";
 import {useSearchParams} from "next/navigation";
@@ -18,13 +18,11 @@ import {filterMeanSalaries, sortMeanSalaries} from "@/utils";
 function HomePageClient({
   salaries,
   inflation,
-  dollarPrice,
   filters,
   options,
 }: {
   salaries: MeanSalary[];
   inflation: number;
-  dollarPrice: DollarPrice;
   filters: Filters;
   options: Options;
 }) {
@@ -89,7 +87,7 @@ function HomePageClient({
             ))}
           </select>
         </div>
-        {dollarPrice.old !== dollarPrice.actual && (
+        {Math.abs(inflation) > 5 && (
           <Label
             className="flex w-full items-center justify-center gap-2 sm:justify-end"
             htmlFor="simulate"
@@ -118,48 +116,54 @@ function HomePageClient({
           </Label>
         )}
       </nav>
-      <div className="relative w-full overflow-auto">
-        <Table className="border">
-          <TableHeader>
-            <TableRow>
-              <TableHead
-                className={cn({underline: filters.sort === "position"}, "min-w-48 cursor-pointer")}
-                onClick={() => handleSort("position")}
-              >
-                Posición
-              </TableHead>
-              <TableHead
-                className={cn({underline: filters.sort === "currency"}, "cursor-pointer")}
-                onClick={() => handleSort("currency")}
-              >
-                Moneda
-              </TableHead>
-              <TableHead
-                className={cn({underline: filters.sort === "seniority"}, "min-w-48 cursor-pointer")}
-                onClick={() => handleSort("seniority")}
-              >
-                Seniority
-              </TableHead>
-              <TableHead
-                className={cn({underline: filters.sort === "value"}, "cursor-pointer")}
-                onClick={() => handleSort("value")}
-              >
-                Salario
-              </TableHead>
-              <TableHead
-                className={cn(
-                  {underline: filters.sort === "count"},
-                  "w-[110px] cursor-pointer text-right",
-                )}
-                onClick={() => handleSort("count")}
-              >
-                Reportes
-              </TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody className="scroll-y-auto max-h-[80vh]">
-            {salaries.length ? (
-              salaries.map(
+      {salaries.length > 0 ? (
+        <div className="relative w-full overflow-auto">
+          <Table className="border">
+            <TableHeader>
+              <TableRow>
+                <TableHead
+                  className={cn(
+                    {underline: filters.sort === "position"},
+                    "min-w-48 cursor-pointer",
+                  )}
+                  onClick={() => handleSort("position")}
+                >
+                  Posición
+                </TableHead>
+                <TableHead
+                  className={cn({underline: filters.sort === "currency"}, "cursor-pointer")}
+                  onClick={() => handleSort("currency")}
+                >
+                  Moneda
+                </TableHead>
+                <TableHead
+                  className={cn(
+                    {underline: filters.sort === "seniority"},
+                    "min-w-48 cursor-pointer",
+                  )}
+                  onClick={() => handleSort("seniority")}
+                >
+                  Seniority
+                </TableHead>
+                <TableHead
+                  className={cn({underline: filters.sort === "value"}, "cursor-pointer")}
+                  onClick={() => handleSort("value")}
+                >
+                  Salario
+                </TableHead>
+                <TableHead
+                  className={cn(
+                    {underline: filters.sort === "count"},
+                    "w-[110px] cursor-pointer text-right",
+                  )}
+                  onClick={() => handleSort("count")}
+                >
+                  Reportes
+                </TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody className="scroll-y-auto max-h-[80vh]">
+              {salaries.map(
                 ({
                   id,
                   count,
@@ -189,34 +193,34 @@ function HomePageClient({
                           maximumFractionDigits: 0,
                         })}
                       </TableCell>
-                      <TableCell className="w-[110px] text-right">{count}</TableCell>
+                      <TableCell className="flex w-[110px] items-center justify-end gap-1.5 text-right">
+                        <span className={cn({"text-yellow-500": count < 3})}>{count}</span>
+                      </TableCell>
                     </TableRow>
                   );
                 },
-              )
-            ) : (
-              <TableRow>
-                <TableCell className="text-center text-muted-foreground" colSpan={5}>
-                  No hay salarios que coincidan con los filtros
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </div>
+              )}
+            </TableBody>
+          </Table>
+        </div>
+      ) : (
+        <div>
+          <p className="flex items-center justify-center text-balance border border-muted bg-muted/25 p-4 text-center text-muted-foreground md:p-8">
+            No hay salarios que coincidan con los filtros
+          </p>
+        </div>
+      )}
     </section>
   );
 }
 
 function HomePageClientContainer({
   salaries,
-  dollarPrice,
   options,
   inflation,
 }: {
   salaries: MeanSalary[];
   options: Options;
-  dollarPrice: DollarPrice;
   inflation: number;
 }) {
   // Get search params from a client component to avoid busting the server cache in every request
@@ -228,7 +232,7 @@ function HomePageClientContainer({
     currency: searchParams.get("currency") || "",
     seniority: searchParams.get("seniority") || "",
     sort: (searchParams.get("sort") as Filters["sort"]) || "position",
-    simulate: searchParams.get("simulate") !== "false",
+    simulate: Math.abs(inflation) > 5 ? searchParams.get("simulate") !== "false" : false,
     direction: (searchParams.get("direction") as "asc" | "desc" | null) || "asc",
   };
 
@@ -238,7 +242,6 @@ function HomePageClientContainer({
 
   return (
     <HomePageClient
-      dollarPrice={dollarPrice}
       filters={filters}
       inflation={inflation}
       options={options}
