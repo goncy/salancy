@@ -2,11 +2,12 @@
 
 import dynamic from "next/dynamic";
 
-import type {Filters, MeanSalary} from "@/types";
+import type {Filters} from "@/filter/types";
+import type {MeanSalary} from "@/salary/types";
 import {cn} from "@/lib/utils";
-import {filterMeanSalaries, sortMeanSalaries} from "@/utils/salary";
+import {filterMeanSalaries, sortMeanSalaries} from "@/salary/utils";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
-import {useFilters} from "@/hooks/use-filters";
+import {useFilters} from "@/filter/hooks/use-filters";
 
 import HomePageLoading from "./loading";
 
@@ -22,9 +23,9 @@ function HomePageClient({salaries, filters}: {salaries: MeanSalary[]; filters: F
   }
 
   return (
-    <section className="grid h-full grid-rows-[auto,1fr] gap-4">
+    <section className="grid h-full gap-4">
       {salaries.length > 0 ? (
-        <div className="relative w-full overflow-auto">
+        <div className="w-full overflow-auto">
           <Table className="border">
             <TableHeader>
               <TableRow>

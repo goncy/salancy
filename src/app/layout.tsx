@@ -1,12 +1,10 @@
 import type {Metadata} from "next";
 
-import {unstable_cacheLife as cacheLife, unstable_cacheTag as cacheTag} from "next/cache";
-
-import api from "@/api";
+import salaryApi from "@/salary/api";
 import FilterSheet, {
-  Provider as FilterSheetProvider,
-  Trigger as FilterSheetTrigger,
-} from "@/components/filters";
+  FilterSheetProvider,
+  FilterSheetTrigger,
+} from "@/filter/components/filters-sheet";
 
 import "./globals.css";
 
@@ -23,9 +21,9 @@ export default async function RootLayout({children}: {children: React.ReactNode}
     <html lang="en">
       <body>
         <FilterSheetProvider>
-          <div className="container m-auto grid h-screen grid-rows-[auto,1fr,auto] gap-2 overflow-hidden bg-background px-4 font-sans antialiased md:gap-4">
+          <div className="container m-auto grid h-screen grid-rows-[auto,1fr,auto] gap-4 overflow-hidden bg-background p-4 font-sans antialiased md:gap-4">
             <header className="flex items-center justify-between">
-              <b className="text-xl font-bold leading-[3rem] md:leading-[4rem]">Salancy</b>
+              <b className="text-xl font-bold">💸 Salancy</b>
               <FilterSheetTrigger />
             </header>
             <main className="overflow-hidden">{children}</main>
@@ -39,15 +37,10 @@ export default async function RootLayout({children}: {children: React.ReactNode}
 }
 
 async function Footer() {
-  "use cache";
-
-  cacheLife("months");
-  cacheTag("salary");
-
-  const salaries = await api.salary.list();
+  const salaries = await salaryApi.salary.list();
 
   return (
-    <footer className="flex min-h-16 items-center justify-center text-balance text-center text-sm text-muted-foreground">
+    <footer className="flex items-center justify-center text-balance text-center text-sm text-muted-foreground">
       <p>
         <a className="underline" href="https://github.com/goncy/salancy">
           Salancy
@@ -56,7 +49,9 @@ async function Footer() {
         <a className="underline" href="https://goncy.dev">
           Goncy
         </a>
-        . Actualizado al {new Date().toLocaleString("es-AR", {dateStyle: "short"})} con{" "}
+        . Datos registrados el{" "}
+        {new Date(process.env.NEXT_PUBLIC_POLL_DATE!).toLocaleString("es-AR", {dateStyle: "short"})}{" "}
+        con{" "}
         <a
           className="underline"
           href={process.env.NEXT_PUBLIC_SHEET_URL}

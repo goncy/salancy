@@ -1,8 +1,11 @@
-import type {DollarPrice, Filters, MeanSalary, RawSalary} from "@/types";
+import type {MeanSalary, RawSalary} from "./types";
+
+import type {Filters} from "@/filter/types";
+import type {USDPrice} from "@/index/types";
 
 export function calculateMeanSalaries(
   salaries: RawSalary[],
-  dollarPrice: DollarPrice,
+  usdPrice: USDPrice,
   inflation: number,
 ): MeanSalary[] {
   // Prepare map to group salaries by title-currency-seniority
@@ -31,12 +34,12 @@ export function calculateMeanSalaries(
 
     // Update the values
     if (salary.currency === "USD") {
-      item.arsOriginalValue += salary.value * dollarPrice.actual;
+      item.arsOriginalValue += salary.value * usdPrice.actual;
       item.usdOriginalValue += salary.value;
-      item.arsSimulatedValue += salary.value * dollarPrice.actual * (1 + inflation / 100);
+      item.arsSimulatedValue += salary.value * usdPrice.actual * (1 + inflation / 100);
     } else {
       item.arsOriginalValue += salary.value;
-      item.usdOriginalValue += salary.value / dollarPrice.actual;
+      item.usdOriginalValue += salary.value / usdPrice.actual;
       item.arsSimulatedValue += salary.value * (1 + inflation / 100);
     }
 

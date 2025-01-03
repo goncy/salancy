@@ -1,6 +1,6 @@
 import {useSearchParams} from "next/navigation";
 
-import {Filters} from "@/types";
+import {Filters} from "../types";
 
 function setFilter(key: string, value: string) {
   // Create new search params

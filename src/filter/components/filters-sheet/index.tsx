@@ -1,8 +1,5 @@
-export {SidebarProvider, SidebarTrigger} from "@/components/ui/sidebar";
-
-import {Filter} from "lucide-react";
-
-import api from "@/api";
+import indicesApi from "@/index/api";
+import salaryApi from "@/salary/api";
 import {
   SheetClose,
   SheetContent,
@@ -10,20 +7,20 @@ import {
   SheetFooter,
   SheetHeader,
   SheetTitle,
-  SheetTrigger,
 } from "@/components/ui/sheet";
 import {Button} from "@/components/ui/button";
-
-import {Separator} from "../ui/separator";
+import {Separator} from "@/components/ui/separator";
 
 import SalaryFilters from "./salaries";
 import SettingsFilters from "./settings";
 
-export {Sheet as Provider} from "@/components/ui/sheet";
+export {Sheet as FilterSheetProvider} from "@/components/ui/sheet";
+
+export {FilterSheetTrigger} from "./trigger";
 
 export default async function FilterSheet() {
-  const {positions, currencies, seniorities} = await api.salary.metadata();
-  const inflation = await api.inflation.fetch();
+  const {positions, currencies, seniorities} = await salaryApi.salary.metadata();
+  const inflation = await indicesApi.inflation.index();
 
   return (
     <SheetContent className="flex w-full flex-col gap-6 md:w-[540px]">
@@ -44,15 +41,5 @@ export default async function FilterSheet() {
         </SheetClose>
       </SheetFooter>
     </SheetContent>
-  );
-}
-
-export function Trigger() {
-  return (
-    <SheetTrigger asChild>
-      <Button size="icon" variant="outline">
-        <Filter />
-      </Button>
-    </SheetTrigger>
   );
 }

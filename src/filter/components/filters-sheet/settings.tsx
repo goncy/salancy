@@ -2,7 +2,7 @@
 
 import {Checkbox} from "@/components/ui/checkbox";
 import {Label} from "@/components/ui/label";
-import {useFilters} from "@/hooks/use-filters";
+import {useFilters} from "@/filter/hooks/use-filters";
 
 export default function Settings({inflation}: {inflation: number}) {
   const [filters, setFilter] = useFilters();
@@ -15,7 +15,7 @@ export default function Settings({inflation}: {inflation: number}) {
             aria-label="Simular salarios actualizados"
             defaultChecked={filters.simulate}
             id="simulate"
-            onCheckedChange={(checked) => setFilter("simulate", String(checked))}
+            onCheckedChange={(checked) => setFilter("simulate", checked ? "true" : "")}
           />
           Simular salarios actualizados
         </Label>
@@ -30,7 +30,7 @@ export default function Settings({inflation}: {inflation: number}) {
             aria-label="Ocultar salarios con pocos reportes"
             defaultChecked={filters.trusted}
             id="trusted"
-            onCheckedChange={(checked) => setFilter("trusted", String(checked))}
+            onCheckedChange={(checked) => setFilter("trusted", checked ? "true" : "")}
           />
           Ocultar salarios con pocos reportes
         </Label>

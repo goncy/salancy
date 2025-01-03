@@ -15,18 +15,3 @@ export interface MeanSalary extends Salary {
   id: string;
   count: number;
 }
-
-export interface Filters {
-  position: string;
-  currency: string;
-  seniority: string;
-  sort: "position" | "seniority" | "currency" | "value" | "count";
-  simulate: boolean;
-  trusted: boolean;
-  direction: "asc" | "desc";
-}
-
-export interface DollarPrice {
-  actual: number;
-  old: number;
-}

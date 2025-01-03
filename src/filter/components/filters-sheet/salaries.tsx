@@ -1,8 +1,9 @@
 "use client";
 
-import type {Salary} from "@/types";
+import type {Salary} from "@/salary/types";
 import {Label} from "@/components/ui/label";
-import {useFilters} from "@/hooks/use-filters";
+import {useFilters} from "@/filter/hooks/use-filters";
+import {Select} from "@/components/ui/select";
 
 export default function Filters({
   positions,
@@ -19,9 +20,8 @@ export default function Filters({
     <div className="flex flex-col gap-6">
       <Label className="flex flex-col gap-1">
         <span>Posición</span>
-        <select
+        <Select
           aria-label="Seleccionar las posiciones"
-          className="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1"
           defaultValue={filters.position}
           onChange={(e) => setFilter("position", e.target.value)}
         >
@@ -29,14 +29,13 @@ export default function Filters({
           {positions.map((position) => (
             <option key={position}>{position}</option>
           ))}
-        </select>
+        </Select>
       </Label>
 
       <Label className="flex flex-col gap-1">
         <span>Moneda</span>
-        <select
+        <Select
           aria-label="Seleccionar las monedas"
-          className="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1"
           defaultValue={filters.currency}
           onChange={(e) => setFilter("currency", e.target.value)}
         >
@@ -44,14 +43,13 @@ export default function Filters({
           {currencies.map((currency) => (
             <option key={currency}>{currency}</option>
           ))}
-        </select>
+        </Select>
       </Label>
 
       <Label className="flex flex-col gap-1">
         <span>Seniority</span>
-        <select
+        <Select
           aria-label="Seleccionar los seniorities"
-          className="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1"
           defaultValue={filters.seniority}
           onChange={(e) => setFilter("seniority", e.target.value)}
         >
@@ -59,7 +57,7 @@ export default function Filters({
           {seniorities.map((seniority) => (
             <option key={seniority}>{seniority}</option>
           ))}
-        </select>
+        </Select>
       </Label>
     </div>
   );
