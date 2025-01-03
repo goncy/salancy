@@ -194,7 +194,7 @@ function HomePageClient({
                         })}
                       </TableCell>
                       <TableCell className="flex w-[110px] items-center justify-end gap-1.5 text-right">
-                        <span className={cn({"text-yellow-500": count < 3})}>{count}</span>
+                        <span className={cn({"text-warning": count < 3})}>{count}</span>
                       </TableCell>
                     </TableRow>
                   );
