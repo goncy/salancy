@@ -87,7 +87,7 @@ function HomePageClient({
             ))}
           </select>
         </div>
-        {Math.abs(inflation) > 5 && (
+        {inflation > 0 && (
           <Label
             className="flex w-full items-center justify-center gap-2 sm:justify-end"
             htmlFor="simulate"
@@ -226,13 +226,16 @@ function HomePageClientContainer({
   // Get search params from a client component to avoid busting the server cache in every request
   const searchParams = useSearchParams();
 
+  // Only show the simulate option if the inflation difference is greater than 5%
+  const hasSignificantInflation = Math.abs(inflation) > 5;
+
   // Get filters from params
   const filters: Filters = {
     position: searchParams.get("position") || "",
     currency: searchParams.get("currency") || "",
     seniority: searchParams.get("seniority") || "",
     sort: (searchParams.get("sort") as Filters["sort"]) || "position",
-    simulate: Math.abs(inflation) > 5 ? searchParams.get("simulate") !== "false" : false,
+    simulate: hasSignificantInflation ? searchParams.get("simulate") !== "false" : false,
     direction: (searchParams.get("direction") as "asc" | "desc" | null) || "asc",
   };
 
@@ -243,7 +246,7 @@ function HomePageClientContainer({
   return (
     <HomePageClient
       filters={filters}
-      inflation={inflation}
+      inflation={hasSignificantInflation ? inflation : 0}
       options={options}
       salaries={sortedSalaries}
     />
