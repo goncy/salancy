@@ -5,7 +5,7 @@ import dynamic from "next/dynamic";
 import type {Filters} from "@/filter/types";
 import type {MeanSalary} from "@/salary/types";
 import {cn} from "@/lib/utils";
-import {filterMeanSalaries, sortMeanSalaries} from "@/salary/utils";
+import {filterMeanSalaries, getSalaryValues, sortMeanSalaries} from "@/salary/utils";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import {useFilters} from "@/filter/hooks/use-filters";
 
@@ -39,12 +39,6 @@ function HomePageClient({salaries, filters}: {salaries: MeanSalary[]; filters: F
                   Posición
                 </TableHead>
                 <TableHead
-                  className={cn({underline: filters.sort === "currency"}, "cursor-pointer")}
-                  onClick={() => handleSort("currency")}
-                >
-                  Moneda
-                </TableHead>
-                <TableHead
                   className={cn(
                     {underline: filters.sort === "seniority"},
                     "min-w-48 cursor-pointer",
@@ -71,43 +65,31 @@ function HomePageClient({salaries, filters}: {salaries: MeanSalary[]; filters: F
               </TableRow>
             </TableHeader>
             <TableBody className="scroll-y-auto max-h-[80vh]">
-              {salaries.map(
-                ({
-                  id,
-                  count,
-                  currency,
-                  seniority,
-                  position,
-                  arsOriginalValue,
-                  arsSimulatedValue,
-                  usdOriginalValue,
-                }) => {
-                  const value =
-                    currency === "ARS"
-                      ? filters.simulate
-                        ? arsSimulatedValue
-                        : arsOriginalValue
-                      : usdOriginalValue;
+              {salaries.map((salary) => {
+                const {id, count, seniority, position} = salary;
+                const [mainValue, secondaryValue] = getSalaryValues(salary, filters);
 
-                  return (
-                    <TableRow key={id}>
-                      <TableCell className="font-medium">{position}</TableCell>
-                      <TableCell>{currency}</TableCell>
-                      <TableCell>{seniority}</TableCell>
-                      <TableCell className="font-medium">
-                        {value.toLocaleString("es-AR", {
-                          style: "currency",
-                          currency,
-                          maximumFractionDigits: 0,
-                        })}
-                      </TableCell>
-                      <TableCell className="flex w-[110px] items-center justify-end gap-1.5 text-right">
-                        <span>{count}</span>
-                      </TableCell>
-                    </TableRow>
-                  );
-                },
-              )}
+                return (
+                  <TableRow
+                    key={id}
+                    className="h-14"
+                    style={{
+                      contentVisibility: "auto",
+                      containIntrinsicSize: "0 53px",
+                    }}
+                  >
+                    <TableCell className="font-medium">{position}</TableCell>
+                    <TableCell>{seniority}</TableCell>
+                    <TableCell className="space-x-2 font-medium">
+                      <span>{mainValue}</span>
+                      <span className="text-muted-foreground">{secondaryValue}</span>
+                    </TableCell>
+                    <TableCell className="flex w-[110px] items-center justify-end gap-1.5 text-right">
+                      <span>{count}</span>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
             </TableBody>
           </Table>
         </div>

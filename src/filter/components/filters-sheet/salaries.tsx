@@ -3,7 +3,13 @@
 import type {Salary} from "@/salary/types";
 import {Label} from "@/components/ui/label";
 import {useFilters} from "@/filter/hooks/use-filters";
-import {Select} from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export default function Filters({
   positions,
@@ -23,12 +29,19 @@ export default function Filters({
         <Select
           aria-label="Seleccionar las posiciones"
           defaultValue={filters.position}
-          onChange={(e) => setFilter("position", e.target.value)}
+          onValueChange={(value) => setFilter("position", value === "all" ? "" : value)}
         >
-          <option value="">Todas las posiciones</option>
-          {positions.map((position) => (
-            <option key={position}>{position}</option>
-          ))}
+          <SelectTrigger>
+            <SelectValue placeholder="Todas las posiciones" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Todas las posiciones</SelectItem>
+            {positions.map((position) => (
+              <SelectItem key={position} value={position}>
+                {position}
+              </SelectItem>
+            ))}
+          </SelectContent>
         </Select>
       </Label>
 
@@ -37,12 +50,19 @@ export default function Filters({
         <Select
           aria-label="Seleccionar las monedas"
           defaultValue={filters.currency}
-          onChange={(e) => setFilter("currency", e.target.value)}
+          onValueChange={(value) => setFilter("currency", value === "all" ? "" : value)}
         >
-          <option value="">Todas las monedas</option>
-          {currencies.map((currency) => (
-            <option key={currency}>{currency}</option>
-          ))}
+          <SelectTrigger>
+            <SelectValue placeholder="Todas las monedas" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Todas las monedas</SelectItem>
+            {currencies.map((currency) => (
+              <SelectItem key={currency} value={currency}>
+                {currency}
+              </SelectItem>
+            ))}
+          </SelectContent>
         </Select>
       </Label>
 
@@ -51,12 +71,19 @@ export default function Filters({
         <Select
           aria-label="Seleccionar los seniorities"
           defaultValue={filters.seniority}
-          onChange={(e) => setFilter("seniority", e.target.value)}
+          onValueChange={(value) => setFilter("seniority", value === "all" ? "" : value)}
         >
-          <option value="">Todos los seniorities</option>
-          {seniorities.map((seniority) => (
-            <option key={seniority}>{seniority}</option>
-          ))}
+          <SelectTrigger>
+            <SelectValue placeholder="Todos los seniorities" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Todos los seniorities</SelectItem>
+            {seniorities.map((seniority) => (
+              <SelectItem key={seniority} value={seniority}>
+                {seniority}
+              </SelectItem>
+            ))}
+          </SelectContent>
         </Select>
       </Label>
     </div>

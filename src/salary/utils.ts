@@ -112,3 +112,22 @@ export function filterMeanSalaries(salaries: MeanSalary[], filters: Filters): Me
     return true;
   });
 }
+
+export function getSalaryValues(
+  {arsOriginalValue, arsSimulatedValue, usdOriginalValue, currency}: MeanSalary,
+  {simulate}: Filters,
+): [string, string] {
+  const arsValue = formatCurrency(simulate ? arsSimulatedValue : arsOriginalValue, "ARS");
+  const usdValue = formatCurrency(usdOriginalValue, "USD");
+
+  return currency === "ARS" ? [arsValue, usdValue] : [usdValue, arsValue];
+}
+
+export function formatCurrency(value: number, currency: string): string {
+  return value.toLocaleString("es-AR", {
+    style: "currency",
+    currency,
+    maximumFractionDigits: 0,
+    currencyDisplay: "code",
+  });
+}
