@@ -5,7 +5,7 @@ import dynamic from "next/dynamic";
 import type {Filters} from "@/filter/types";
 import type {MeanSalary} from "@/salary/types";
 import {cn} from "@/lib/utils";
-import {filterMeanSalaries, getSalaryValues, sortMeanSalaries} from "@/salary/utils";
+import {filterMeanSalaries, formatCurrency, sortMeanSalaries} from "@/salary/utils";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import {useFilters} from "@/filter/hooks/use-filters";
 
@@ -41,7 +41,7 @@ function HomePageClient({salaries, filters}: {salaries: MeanSalary[]; filters: F
                 <TableHead
                   className={cn(
                     {underline: filters.sort === "seniority"},
-                    "min-w-48 cursor-pointer",
+                    "min-w-56 cursor-pointer",
                   )}
                   onClick={() => handleSort("seniority")}
                 >
@@ -65,31 +65,55 @@ function HomePageClient({salaries, filters}: {salaries: MeanSalary[]; filters: F
               </TableRow>
             </TableHeader>
             <TableBody className="scroll-y-auto max-h-[80vh]">
-              {salaries.map((salary) => {
-                const {id, count, seniority, position} = salary;
-                const [mainValue, secondaryValue] = getSalaryValues(salary, filters);
+              {salaries.map(
+                ({
+                  id,
+                  count,
+                  seniority,
+                  position,
+                  currency,
+                  arsSimulatedValue,
+                  arsOriginalValue,
+                  usdOriginalValue,
+                }) => {
+                  const ars = formatCurrency(
+                    filters.simulate ? arsSimulatedValue : arsOriginalValue,
+                    "ARS",
+                  );
+                  const usd = formatCurrency(usdOriginalValue, "USD");
 
-                return (
-                  <TableRow
-                    key={id}
-                    className="h-14"
-                    style={{
-                      contentVisibility: "auto",
-                      containIntrinsicSize: "0 53px",
-                    }}
-                  >
-                    <TableCell className="font-medium">{position}</TableCell>
-                    <TableCell>{seniority}</TableCell>
-                    <TableCell className="space-x-2 font-medium">
-                      <span>{mainValue}</span>
-                      <span className="text-muted-foreground">{secondaryValue}</span>
-                    </TableCell>
-                    <TableCell className="flex w-[110px] items-center justify-end gap-1.5 text-right">
-                      <span>{count}</span>
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
+                  return (
+                    <TableRow
+                      key={id}
+                      className="h-14"
+                      style={{
+                        contentVisibility: "auto",
+                        containIntrinsicSize: "0 53px",
+                      }}
+                    >
+                      <TableCell className="font-medium">{position}</TableCell>
+                      <TableCell>{seniority}</TableCell>
+                      <TableCell className="space-x-2 font-medium">
+                        {filters.conversion ? (
+                          <>
+                            <span className={cn({"text-muted-foreground": currency === "ARS"})}>
+                              {ars}
+                            </span>
+                            <span className={cn({"text-muted-foreground": currency === "USD"})}>
+                              {usd}
+                            </span>
+                          </>
+                        ) : (
+                          <span>{currency === "ARS" ? ars : usd}</span>
+                        )}
+                      </TableCell>
+                      <TableCell className="flex w-[110px] items-center justify-end gap-1.5 text-right">
+                        <span>{count}</span>
+                      </TableCell>
+                    </TableRow>
+                  );
+                },
+              )}
             </TableBody>
           </Table>
         </div>

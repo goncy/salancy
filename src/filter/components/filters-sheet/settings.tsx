@@ -10,6 +10,20 @@ export default function Settings({inflation}: {inflation: number}) {
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-2">
+        <Label className="flex w-full items-center gap-2" htmlFor="trusted">
+          <Checkbox
+            aria-label="Mostrar salarios convertido a moneda secundaria"
+            defaultChecked={filters.conversion}
+            id="conversion"
+            onCheckedChange={(checked) => setFilter("conversion", checked ? "true" : "")}
+          />
+          Mostrar en moneda secundaria
+        </Label>
+        <small className="leading-tight text-muted-foreground">
+          Se mostrará un segundo valor del salario convertido a la moneda secundaria.
+        </small>
+      </div>
+      <div className="flex flex-col gap-2">
         <Label className="flex w-full items-center gap-2" htmlFor="simulate">
           <Checkbox
             aria-label="Simular salarios actualizados"

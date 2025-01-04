@@ -5,5 +5,6 @@ export interface Filters {
   sort: "position" | "seniority" | "currency" | "value" | "count";
   simulate: boolean;
   trusted: boolean;
+  conversion: boolean;
   direction: "asc" | "desc";
 }
