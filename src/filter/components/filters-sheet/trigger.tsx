@@ -14,7 +14,7 @@ import {Filters} from "../../types";
 function FilterSheetTriggerContainer() {
   const [filters] = useFilters();
   const hasFilters = useMemo(
-    () => ["category", "simulate"].some((key) => Boolean(filters[key as keyof Filters])),
+    () => ["category", "simulate", "count"].some((key) => Boolean(filters[key as keyof Filters])),
     [filters],
   );
 

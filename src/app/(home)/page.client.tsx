@@ -3,7 +3,7 @@
 import dynamic from "next/dynamic";
 
 import type {Category, Salary} from "@/salary/types";
-import {filterMeanSalaries, formatSalary} from "@/salary/utils";
+import {filterSalaries, formatSalary} from "@/salary/utils";
 import {Table, TableBody, TableCell, TableRow} from "@/components/ui/table";
 import {useFilters} from "@/filter/hooks/use-filters";
 
@@ -35,10 +35,24 @@ function HomePageClient({salaries}: {salaries: Record<Salary["position"], Salary
                   <TableRow key={salary.id} className="h-14">
                     <TableCell className="min-w-64">{salary.seniority}</TableCell>
                     <TableCell className="w-32 text-left font-medium">
-                      {ars ? formatSalary(ars, "ARS") : ""}
+                      {Boolean(ars) && (
+                        <span className="flex items-center gap-2">
+                          {formatSalary(ars, "ARS")}
+                          {Boolean(filters.count) && (
+                            <small className="text-muted-foreground">({salary.ars.count})</small>
+                          )}
+                        </span>
+                      )}
                     </TableCell>
                     <TableCell className="w-32 text-left font-medium">
-                      {usd ? formatSalary(usd, "USD") : ""}
+                      {Boolean(usd) && (
+                        <span className="flex items-center gap-2">
+                          {formatSalary(usd, "USD")}
+                          {Boolean(filters.count) && (
+                            <small className="text-muted-foreground">({salary.usd.count})</small>
+                          )}
+                        </span>
+                      )}
                     </TableCell>
                   </TableRow>
                 );
@@ -60,7 +74,7 @@ function HomePageClientContainer({
 }) {
   const [filters] = useFilters();
 
-  const filteredSalaries = filterMeanSalaries(salaries, categories, filters);
+  const filteredSalaries = filterSalaries(salaries, categories, filters);
 
   return <HomePageClient salaries={filteredSalaries} />;
 }

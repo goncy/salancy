@@ -22,6 +22,7 @@ export function useFilters(): [Filters, typeof setFilter] {
 
   const filters: Filters = {
     simulate: searchParams.get("simulate") === "true",
+    count: searchParams.get("count") === "true",
     category: searchParams.get("category") || "",
   };
 

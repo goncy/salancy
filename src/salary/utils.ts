@@ -80,7 +80,7 @@ export function calculateMeanSalaries(
   return Object.fromEntries(Object.entries(groups).toSorted((a, b) => a[0].localeCompare(b[0])));
 }
 
-export function filterMeanSalaries(
+export function filterSalaries(
   salaries: Record<Salary["position"], Salary[]>,
   categories: Category[],
   filters: Filters,
@@ -96,6 +96,7 @@ export function filterMeanSalaries(
         }
       }
 
+      // Return true if no filters are applied
       return true;
     }),
   );
