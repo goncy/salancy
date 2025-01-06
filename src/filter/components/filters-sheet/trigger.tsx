@@ -22,7 +22,7 @@ function FilterSheetTriggerContainer() {
   return (
     <SheetTrigger asChild>
       <Button className="relative" size="icon" variant="outline">
-        <Filter />
+        <Filter className="h-4 w-4" />
         {Boolean(hasFilters) && (
           <span className="absolute -right-1 -top-1 h-2.5 w-2.5 rounded-full border border-secondary bg-primary" />
         )}

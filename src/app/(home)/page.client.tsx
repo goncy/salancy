@@ -25,8 +25,8 @@ function HomePageClient({salaries, filters}: {salaries: MeanSalary[]; filters: F
   return (
     <section className="grid h-full gap-4">
       {salaries.length > 0 ? (
-        <div className="w-full overflow-auto">
-          <Table className="border">
+        <div className="w-full overflow-auto rounded-md border">
+          <Table>
             <TableHeader>
               <TableRow>
                 <TableHead
@@ -36,7 +36,13 @@ function HomePageClient({salaries, filters}: {salaries: MeanSalary[]; filters: F
                   )}
                   onClick={() => handleSort("position")}
                 >
-                  Posición
+                  Posición{" "}
+                  {filters.sort === "position" &&
+                    (filters.direction === "desc" ? (
+                      <span className="inline-block h-4 w-4">↓</span>
+                    ) : (
+                      <span className="inline-block h-4 w-4">↑</span>
+                    ))}
                 </TableHead>
                 <TableHead
                   className={cn(
@@ -45,13 +51,25 @@ function HomePageClient({salaries, filters}: {salaries: MeanSalary[]; filters: F
                   )}
                   onClick={() => handleSort("seniority")}
                 >
-                  Seniority
+                  Seniority{" "}
+                  {filters.sort === "seniority" &&
+                    (filters.direction === "desc" ? (
+                      <span className="inline-block h-4 w-4">↓</span>
+                    ) : (
+                      <span className="inline-block h-4 w-4">↑</span>
+                    ))}
                 </TableHead>
                 <TableHead
                   className={cn({underline: filters.sort === "value"}, "cursor-pointer")}
                   onClick={() => handleSort("value")}
                 >
-                  Salario
+                  Salario{" "}
+                  {filters.sort === "value" &&
+                    (filters.direction === "desc" ? (
+                      <span className="inline-block h-4 w-4">↓</span>
+                    ) : (
+                      <span className="inline-block h-4 w-4">↑</span>
+                    ))}
                 </TableHead>
                 <TableHead
                   className={cn(
@@ -60,7 +78,13 @@ function HomePageClient({salaries, filters}: {salaries: MeanSalary[]; filters: F
                   )}
                   onClick={() => handleSort("count")}
                 >
-                  Reportes
+                  Reportes{" "}
+                  {filters.sort === "count" &&
+                    (filters.direction === "desc" ? (
+                      <span className="inline-block h-4 w-4">↓</span>
+                    ) : (
+                      <span className="inline-block h-4 w-4">↑</span>
+                    ))}
                 </TableHead>
               </TableRow>
             </TableHeader>
