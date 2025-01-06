@@ -1,32 +1,6 @@
-import type {USDPrice} from "./types";
-
 import {unstable_cacheLife as cacheLife, unstable_cacheTag as cacheTag} from "next/cache";
 
 const api = {
-  usd: {
-    price: async (): Promise<USDPrice> => {
-      "use cache";
-
-      cacheLife("months");
-      cacheTag("usd");
-
-      // Get the price from Dolarito
-      const price = await fetch("https://www.dolarito.ar/api/frontend/quotations/dolar", {
-        headers: {
-          "auth-client": process.env.DOLARITO_TOKEN!,
-        },
-      })
-        .then(
-          (res) => res.json() as Promise<Record<string, {name: string; buy: number; sell: number}>>,
-        )
-        .then((prices) => prices["oficial"].sell);
-
-      return {
-        old: Number(process.env.NEXT_PUBLIC_ORIGINAL_DOLLAR_PRICE),
-        actual: Number(price),
-      };
-    },
-  },
   inflation: {
     index: async (): Promise<number> => {
       "use cache";
