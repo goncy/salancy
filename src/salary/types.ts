@@ -6,12 +6,20 @@ export interface RawSalary {
 }
 
 export interface Salary extends Omit<RawSalary, "value"> {
-  arsOriginalValue: number;
-  usdOriginalValue: number;
-  arsSimulatedValue: number;
+  id: string;
+  ars: {
+    original: number;
+    current: number;
+    count: number;
+  };
+  usd: {
+    original: number;
+    current: number;
+    count: number;
+  };
 }
 
-export interface MeanSalary extends Salary {
-  id: string;
-  count: number;
+export interface Category {
+  name: string;
+  positions: string[];
 }

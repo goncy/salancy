@@ -1,4 +1,4 @@
-import type {MeanSalary, RawSalary, Salary} from "./types";
+import type {Category, RawSalary, Salary} from "./types";
 
 import {unstable_cacheLife as cacheLife, unstable_cacheTag as cacheTag} from "next/cache";
 
@@ -33,32 +33,47 @@ const api = {
         }) as RawSalary[];
     },
     mean: {
-      list: async (): Promise<MeanSalary[]> => {
+      list: async (): Promise<Record<Salary["position"], Salary[]>> => {
         const rawSalaries = await api.salary.list();
-        const dollarPrice = await indicesApi.usd.price();
         const inflation = await indicesApi.inflation.index();
 
-        return calculateMeanSalaries(rawSalaries, dollarPrice, inflation);
+        return calculateMeanSalaries(rawSalaries, inflation);
       },
     },
-    metadata: async () => {
-      const salaries = await api.salary.list();
+    category: {
+      list: async (): Promise<Category[]> => {
+        "use cache";
 
-      const positions = new Set<Salary["position"]>();
-      const currencies = new Set<Salary["currency"]>();
-      const seniorities = new Set<Salary["seniority"]>();
+        cacheLife("months");
+        cacheTag("category");
 
-      for (const {position, currency, seniority} of salaries) {
-        positions.add(position);
-        currencies.add(currency);
-        seniorities.add(seniority);
-      }
+        const data = await fetch(process.env.NEXT_PUBLIC_CATEGORY_SHEET_URL!).then((res) =>
+          res.text(),
+        );
 
-      return {
-        positions: Array.from(positions).toSorted((a, b) => a.localeCompare(b)),
-        currencies: Array.from(currencies).toSorted((a, b) => a.localeCompare(b)),
-        seniorities: Array.from(seniorities).toSorted((a, b) => a.localeCompare(b)),
-      };
+        // Split into rows and get the first row as headers
+        const [header, ...rows] = data.split("\n");
+        const categories: Category[] = header
+          .trim()
+          .split("\t")
+          .filter(Boolean)
+          .map((name) => ({name, positions: []}));
+
+        for (const row of rows) {
+          const columns = row.trim().split("\t");
+
+          for (let column = 0; column < columns.length; column++) {
+            const category = categories[column];
+            const position = columns[column];
+
+            if (category && position) {
+              category.positions.push(position);
+            }
+          }
+        }
+
+        return categories;
+      },
     },
   },
 };

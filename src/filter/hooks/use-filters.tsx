@@ -21,14 +21,8 @@ export function useFilters(): [Filters, typeof setFilter] {
   const searchParams = useSearchParams();
 
   const filters: Filters = {
-    position: searchParams.get("position") || "",
-    currency: searchParams.get("currency") || "",
-    seniority: searchParams.get("seniority") || "",
     simulate: searchParams.get("simulate") === "true",
-    trusted: searchParams.get("trusted") === "true",
-    conversion: searchParams.get("conversion") === "true",
-    sort: (searchParams.get("sort") as Filters["sort"]) || "position",
-    direction: (searchParams.get("direction") as Filters["direction"]) || "asc",
+    category: searchParams.get("category") || "",
   };
 
   return [filters, setFilter];

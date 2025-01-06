@@ -1,19 +1,17 @@
-import type {MeanSalary, RawSalary} from "./types";
+import type {Category, RawSalary, Salary} from "./types";
 
 import type {Filters} from "@/filter/types";
-import type {USDPrice} from "@/index/types";
 
 export function calculateMeanSalaries(
   salaries: RawSalary[],
-  usdPrice: USDPrice,
   inflation: number,
-): MeanSalary[] {
+): Record<Salary["position"], Salary[]> {
   // Prepare map to group salaries by title-currency-seniority
-  const table = new Map<string, MeanSalary>();
+  const table = new Map<string, Salary>();
 
   salaries.forEach((salary) => {
     // Create an identifier key
-    const id = `${salary.position}-${salary.currency}-${salary.seniority}`;
+    const id = `${salary.position}-${salary.seniority}`;
 
     // If key is not on the table, create it
     if (!table.has(id)) {
@@ -22,10 +20,16 @@ export function calculateMeanSalaries(
         position: salary.position,
         seniority: salary.seniority,
         currency: salary.currency,
-        arsOriginalValue: 0,
-        usdOriginalValue: 0,
-        arsSimulatedValue: 0,
-        count: 0,
+        ars: {
+          original: 0,
+          current: 0,
+          count: 0,
+        },
+        usd: {
+          original: 0,
+          current: 0,
+          count: 0,
+        },
       });
     }
 
@@ -34,86 +38,70 @@ export function calculateMeanSalaries(
 
     // Update the values
     if (salary.currency === "USD") {
-      item.arsOriginalValue += salary.value * usdPrice.actual;
-      item.usdOriginalValue += salary.value;
-      item.arsSimulatedValue += salary.value * usdPrice.actual * (1 + inflation / 100);
+      item.usd.original += salary.value;
+      item.usd.current += salary.value;
+      item.usd.count++;
     } else {
-      item.arsOriginalValue += salary.value;
-      item.usdOriginalValue += salary.value / usdPrice.actual;
-      item.arsSimulatedValue += salary.value * (1 + inflation / 100);
+      item.ars.original += salary.value;
+      item.ars.current += salary.value * (1 + inflation / 100);
+      item.ars.count++;
     }
-
-    // Update the count
-    item.count++;
   });
 
-  // Create and return salary list with mean values
-  return Array.from(table.values()).map((salary) => ({
-    ...salary,
-    arsOriginalValue: Math.round(salary.arsOriginalValue / salary.count),
-    usdOriginalValue: Math.round(salary.usdOriginalValue / salary.count),
-    arsSimulatedValue: Math.round(salary.arsSimulatedValue / salary.count),
-  }));
+  // Calculate mean values
+  const meanSalaries = Array.from(table.values())
+    .map((salary) => ({
+      ...salary,
+      ars: {
+        ...salary.ars,
+        original: Math.round(salary.ars.original / salary.ars.count),
+        current: Math.round(salary.ars.current / salary.ars.count),
+      },
+      usd: {
+        ...salary.usd,
+        original: Math.round(salary.usd.original / salary.usd.count),
+        current: Math.round(salary.usd.current / salary.usd.count),
+      },
+    }))
+    // Sort by seniority
+    .toSorted((a, b) => a.seniority.localeCompare(b.seniority));
+
+  // Group salaries by position
+  const groups = meanSalaries.reduce(
+    (groups, salary) => {
+      groups[salary.position] = [...(groups[salary.position] ?? []), salary];
+
+      return groups;
+    },
+    {} as Record<Salary["position"], Salary[]>,
+  );
+
+  // Sort by position
+  return Object.fromEntries(Object.entries(groups).toSorted((a, b) => a[0].localeCompare(b[0])));
 }
 
-export function sortMeanSalaries(meanSalaries: MeanSalary[], filters: Filters): MeanSalary[] {
-  return meanSalaries.toSorted((a, b) => {
-    // Filter by value
-    if (filters.sort === "value") {
-      const valueA = filters.simulate ? a.arsSimulatedValue : a.arsOriginalValue;
-      const valueB = filters.simulate ? b.arsSimulatedValue : b.arsOriginalValue;
+export function filterMeanSalaries(
+  salaries: Record<Salary["position"], Salary[]>,
+  categories: Category[],
+  filters: Filters,
+): Record<Salary["position"], Salary[]> {
+  return Object.fromEntries(
+    Object.entries(salaries).filter(([position]) => {
+      // Filter by category
+      if (filters.category) {
+        const category = categories.find((category) => category.name === filters.category);
 
-      return filters.direction === "asc" ? valueA - valueB : valueB - valueA;
-    }
+        if (!category || !category.positions.includes(position)) {
+          return false;
+        }
+      }
 
-    // Filter by count
-    if (filters.sort === "count") {
-      return filters.direction === "asc" ? a.count - b.count : b.count - a.count;
-    }
-
-    // Filter by the rest
-    return filters.direction === "asc"
-      ? String(a[filters.sort]).localeCompare(String(b[filters.sort]))
-      : String(b[filters.sort]).localeCompare(String(a[filters.sort]));
-  });
+      return true;
+    }),
+  );
 }
 
-export function filterMeanSalaries(salaries: MeanSalary[], filters: Filters): MeanSalary[] {
-  return salaries.filter((salary) => {
-    // Filter by position
-    if (
-      filters.position &&
-      !salary.position.toLowerCase().includes(filters.position.toLowerCase())
-    ) {
-      return false;
-    }
-
-    // Filter by currency
-    if (
-      filters.currency &&
-      !salary.currency.toLowerCase().includes(filters.currency.toLowerCase())
-    ) {
-      return false;
-    }
-
-    // Filter by seniority
-    if (
-      filters.seniority &&
-      !salary.seniority.toLowerCase().includes(filters.seniority.toLowerCase())
-    ) {
-      return false;
-    }
-
-    // Filter salaries with trusted count
-    if (filters.trusted && salary.count < 3) {
-      return false;
-    }
-
-    return true;
-  });
-}
-
-export function formatCurrency(value: number, currency: string): string {
+export function formatSalary(value: number, currency: string): string {
   return value.toLocaleString(undefined, {
     style: "currency",
     currency,

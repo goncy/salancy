@@ -2,140 +2,67 @@
 
 import dynamic from "next/dynamic";
 
-import type {Filters} from "@/filter/types";
-import type {MeanSalary} from "@/salary/types";
-import {cn} from "@/lib/utils";
-import {filterMeanSalaries, formatCurrency, sortMeanSalaries} from "@/salary/utils";
-import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
+import type {Category, Salary} from "@/salary/types";
+import {filterMeanSalaries, formatSalary} from "@/salary/utils";
+import {Table, TableBody, TableCell, TableRow} from "@/components/ui/table";
 import {useFilters} from "@/filter/hooks/use-filters";
 
 import HomePageLoading from "./loading";
 
-function HomePageClient({salaries, filters}: {salaries: MeanSalary[]; filters: Filters}) {
-  const [, setFilter] = useFilters();
+function HomePageClient({salaries}: {salaries: Record<Salary["position"], Salary[]>}) {
+  const [filters] = useFilters();
 
-  function handleSort(order: Filters["sort"]) {
-    if (order === filters.sort) {
-      setFilter("direction", filters.direction === "asc" ? "desc" : "asc");
-    } else {
-      setFilter("sort", order);
-    }
+  if (Object.keys(salaries).length === 0) {
+    return (
+      <div className="flex h-full items-center justify-center text-muted-foreground">
+        No se encontraron resultados
+      </div>
+    );
   }
 
   return (
-    <section className="grid h-full gap-4">
-      {salaries.length > 0 ? (
-        <div className="w-full overflow-auto">
+    <section className="grid h-full grid-cols-[repeat(auto-fill,minmax(480px,1fr))] content-start gap-8 overflow-auto">
+      {Object.entries(salaries).map(([position, salaries]) => (
+        <div key={position} className="flex flex-col gap-2">
+          <p className="text-lg font-medium">{position}</p>
           <Table className="border">
-            <TableHeader>
-              <TableRow>
-                <TableHead
-                  className={cn(
-                    {underline: filters.sort === "position"},
-                    "min-w-48 cursor-pointer",
-                  )}
-                  onClick={() => handleSort("position")}
-                >
-                  Posición
-                </TableHead>
-                <TableHead
-                  className={cn(
-                    {underline: filters.sort === "seniority"},
-                    "min-w-56 cursor-pointer",
-                  )}
-                  onClick={() => handleSort("seniority")}
-                >
-                  Seniority
-                </TableHead>
-                <TableHead
-                  className={cn({underline: filters.sort === "value"}, "cursor-pointer")}
-                  onClick={() => handleSort("value")}
-                >
-                  Salario
-                </TableHead>
-                <TableHead
-                  className={cn(
-                    {underline: filters.sort === "count"},
-                    "w-[110px] cursor-pointer text-right",
-                  )}
-                  onClick={() => handleSort("count")}
-                >
-                  Reportes
-                </TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody className="scroll-y-auto max-h-[80vh]">
-              {salaries.map(
-                ({
-                  id,
-                  count,
-                  seniority,
-                  position,
-                  currency,
-                  arsSimulatedValue,
-                  arsOriginalValue,
-                  usdOriginalValue,
-                }) => {
-                  const ars = formatCurrency(
-                    filters.simulate ? arsSimulatedValue : arsOriginalValue,
-                    "ARS",
-                  );
-                  const usd = formatCurrency(usdOriginalValue, "USD");
+            <TableBody>
+              {salaries.map((salary) => {
+                const ars = filters.simulate ? salary.ars.current : salary.ars.original;
+                const usd = salary.usd.original;
 
-                  return (
-                    <TableRow
-                      key={id}
-                      className="h-14"
-                      style={{
-                        contentVisibility: "auto",
-                        containIntrinsicSize: "0 53px",
-                      }}
-                    >
-                      <TableCell className="font-medium">{position}</TableCell>
-                      <TableCell>{seniority}</TableCell>
-                      <TableCell className="space-x-2 font-medium">
-                        {filters.conversion ? (
-                          <>
-                            <span className={cn({"text-muted-foreground": currency === "ARS"})}>
-                              {ars}
-                            </span>
-                            <span className={cn({"text-muted-foreground": currency === "USD"})}>
-                              {usd}
-                            </span>
-                          </>
-                        ) : (
-                          <span>{currency === "ARS" ? ars : usd}</span>
-                        )}
-                      </TableCell>
-                      <TableCell className="flex w-[110px] items-center justify-end gap-1.5 text-right">
-                        <span>{count}</span>
-                      </TableCell>
-                    </TableRow>
-                  );
-                },
-              )}
+                return (
+                  <TableRow key={salary.id} className="h-14">
+                    <TableCell className="min-w-64">{salary.seniority}</TableCell>
+                    <TableCell className="w-32 text-left font-medium">
+                      {ars ? formatSalary(ars, "ARS") : ""}
+                    </TableCell>
+                    <TableCell className="w-32 text-left font-medium">
+                      {usd ? formatSalary(usd, "USD") : ""}
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
             </TableBody>
           </Table>
         </div>
-      ) : (
-        <div>
-          <p className="flex items-center justify-center text-balance border border-muted bg-muted/25 p-4 text-center text-muted-foreground md:p-8">
-            No hay salarios que coincidan con los filtros
-          </p>
-        </div>
-      )}
+      ))}
     </section>
   );
 }
 
-function HomePageClientContainer({salaries}: {salaries: MeanSalary[]}) {
+function HomePageClientContainer({
+  categories,
+  salaries,
+}: {
+  categories: Category[];
+  salaries: Record<Salary["position"], Salary[]>;
+}) {
   const [filters] = useFilters();
 
-  // Get filtered mean salaries
-  const filteredSalaries = filterMeanSalaries(salaries, filters);
-  const sortedSalaries = sortMeanSalaries(filteredSalaries, filters);
+  const filteredSalaries = filterMeanSalaries(salaries, categories, filters);
 
-  return <HomePageClient filters={filters} salaries={sortedSalaries} />;
+  return <HomePageClient salaries={filteredSalaries} />;
 }
 
 export default dynamic(async () => HomePageClientContainer, {
