@@ -1,10 +1,6 @@
-import type {Category, RawSalary, Salary} from "./types";
+import type {Category, RawSalary} from "./types";
 
 import {unstable_cacheLife as cacheLife, unstable_cacheTag as cacheTag} from "next/cache";
-
-import indicesApi from "@/index/api";
-
-import {calculateMeanSalaries} from "./utils";
 
 const api = {
   salary: {
@@ -14,10 +10,10 @@ const api = {
       cacheLife("months");
       cacheTag("salary");
 
-      // Get list of salaries
+      // Fetch raw CSV data from Google Sheets
       const csv = await fetch(process.env.NEXT_PUBLIC_SHEET_URL!).then((res) => res.text());
 
-      // Convert from csv row to salary
+      // Parse CSV rows into RawSalary objects, skipping the header row
       return csv
         .split("\n")
         .slice(1)
@@ -32,14 +28,6 @@ const api = {
           };
         }) as RawSalary[];
     },
-    mean: {
-      list: async (): Promise<Record<Salary["position"], Salary[]>> => {
-        const rawSalaries = await api.salary.list();
-        const inflation = await indicesApi.inflation.index();
-
-        return calculateMeanSalaries(rawSalaries, inflation);
-      },
-    },
     category: {
       list: async (): Promise<Category[]> => {
         "use cache";
@@ -47,11 +35,12 @@ const api = {
         cacheLife("months");
         cacheTag("category");
 
+        // Fetch category data from Google Sheets
         const data = await fetch(process.env.NEXT_PUBLIC_CATEGORY_SHEET_URL!).then((res) =>
           res.text(),
         );
 
-        // Split into rows and get the first row as headers
+        // Parse header row to create category objects
         const [header, ...rows] = data.split("\n");
         const categories: Category[] = header
           .trim()
@@ -59,6 +48,8 @@ const api = {
           .filter(Boolean)
           .map((name) => ({name, positions: []}));
 
+        // Parse each row and assign positions to their respective categories
+        // Each column in a row corresponds to a position in that category
         for (const row of rows) {
           const columns = row.trim().split("\t");
 
