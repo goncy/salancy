@@ -17,6 +17,8 @@ export const metadata: Metadata = {
 };
 
 export default async function RootLayout({children}: {children: React.ReactNode}) {
+  const salaries = await salaryApi.salary.list();
+
   return (
     <html lang="en">
       <body>
@@ -27,34 +29,26 @@ export default async function RootLayout({children}: {children: React.ReactNode}
               <FilterSheetTrigger />
             </header>
             <main className="overflow-hidden">{children}</main>
-            <Footer />
+            <footer className="flex items-center justify-center text-balance text-center text-sm text-muted-foreground">
+              <p>
+                <a className="underline" href="https://github.com/goncy/salancy">
+                  Salancy
+                </a>{" "}
+                fue hecho con 🖤 por{" "}
+                <a className="underline" href="https://goncy.dev">
+                  Goncy
+                </a>
+                . Datos registrados el{" "}
+                {new Date(process.env.NEXT_PUBLIC_POLL_DATE!).toLocaleString(undefined, {
+                  dateStyle: "short",
+                })}{" "}
+                con {salaries.length} salarios reportados.
+              </p>
+            </footer>
           </div>
           <FilterSheet />
         </FilterSheetProvider>
       </body>
     </html>
-  );
-}
-
-async function Footer() {
-  const salaries = await salaryApi.salary.list();
-
-  return (
-    <footer className="flex items-center justify-center text-balance text-center text-sm text-muted-foreground">
-      <p>
-        <a className="underline" href="https://github.com/goncy/salancy">
-          Salancy
-        </a>{" "}
-        fue hecho con 🖤 por{" "}
-        <a className="underline" href="https://goncy.dev">
-          Goncy
-        </a>
-        . Datos registrados el{" "}
-        {new Date(process.env.NEXT_PUBLIC_POLL_DATE!).toLocaleString(undefined, {
-          dateStyle: "short",
-        })}{" "}
-        con {salaries.length} salarios reportados.
-      </p>
-    </footer>
   );
 }
