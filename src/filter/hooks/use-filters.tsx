@@ -21,6 +21,7 @@ export function useFilters(): [Filters, typeof setFilter] {
   const searchParams = useSearchParams();
 
   const filters: Filters = {
+    trusted: searchParams.get("trusted") === "true",
     simulate: searchParams.get("simulate") === "true",
     count: searchParams.get("count") === "true",
     category: searchParams.get("category") || "",

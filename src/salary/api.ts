@@ -11,7 +11,7 @@ const api = {
       cacheTag("salary");
 
       // Fetch raw CSV data from Google Sheets
-      const csv = await fetch(process.env.NEXT_PUBLIC_SHEET_URL!).then((res) => res.text());
+      const csv = await fetch(process.env.NEXT_PUBLIC_SALARY_SHEET_URL!).then((res) => res.text());
 
       // Parse CSV rows into RawSalary objects, skipping the header row
       return csv

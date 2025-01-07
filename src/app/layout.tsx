@@ -54,7 +54,7 @@ async function Footer() {
         con{" "}
         <a
           className="underline"
-          href={process.env.NEXT_PUBLIC_SHEET_URL}
+          href={process.env.NEXT_PUBLIC_SALARY_SHEET_URL}
           rel="noopener"
           target="_blank"
         >

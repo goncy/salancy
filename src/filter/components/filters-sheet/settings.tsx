@@ -10,6 +10,21 @@ export default function Settings({inflation}: {inflation: number}) {
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-2">
+        <Label className="flex w-full items-center gap-2" htmlFor="count">
+          <Checkbox
+            aria-label="Mostrar cantidad de reportes"
+            defaultChecked={filters.count}
+            id="count"
+            onCheckedChange={(checked) => setFilter("count", checked ? "true" : "")}
+          />
+          Mostrar cantidad de reportes
+        </Label>
+        <small className="leading-tight text-muted-foreground">
+          Muestra la cantidad de reportes que hay para cada salario.
+        </small>
+      </div>
+
+      <div className="flex flex-col gap-2">
         <Label className="flex w-full items-center gap-2" htmlFor="simulate">
           <Checkbox
             aria-label="Simular salarios actualizados"
@@ -22,21 +37,6 @@ export default function Settings({inflation}: {inflation: number}) {
         <small className="leading-tight text-muted-foreground">
           Simulamos los valores usando la inflación desde cuando la gente subió su salario (
           {inflation}%).
-        </small>
-      </div>
-
-      <div className="flex flex-col gap-2">
-        <Label className="flex w-full items-center gap-2" htmlFor="count">
-          <Checkbox
-            aria-label="Mostrar cantidad de reportes"
-            defaultChecked={filters.count}
-            id="count"
-            onCheckedChange={(checked) => setFilter("count", checked ? "true" : "")}
-          />
-          Mostrar cantidad de reportes
-        </Label>
-        <small className="leading-tight text-muted-foreground">
-          Muestra la cantidad de reportes que hay para cada salario.
         </small>
       </div>
     </div>

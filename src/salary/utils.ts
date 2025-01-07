@@ -58,19 +58,40 @@ export function filterSalaries(
   categories: Category[],
   filters: Filters,
 ): Salary[] {
-  return salaries.filter((salary) => {
+  return salaries.reduce((result, salary) => {
+    const draft = structuredClone(salary);
+
     // Filter by category
     if (filters.category) {
       const category = categories.find((category) => category.name === filters.category);
 
       if (!category || !category.positions.includes(salary.position)) {
-        return false;
+        return result;
+      }
+    }
+
+    // Filter by trusted (only show salaries with at least 2 reports)
+    if (filters.trusted) {
+      if (salary.ars.count < 2) {
+        draft.ars.count = 0;
+        draft.ars.current = 0;
+        draft.ars.original = 0;
+      }
+
+      if (salary.usd.count < 2) {
+        draft.usd.count = 0;
+        draft.usd.current = 0;
+        draft.usd.original = 0;
+      }
+
+      if (draft.ars.count === 0 && draft.usd.count === 0) {
+        return result;
       }
     }
 
     // Return true if no filters are applied
-    return true;
-  });
+    return result.concat(draft);
+  }, [] as Salary[]);
 }
 
 export function groupSalariesByPosition(salaries: Salary[]): Record<Salary["position"], Salary[]> {

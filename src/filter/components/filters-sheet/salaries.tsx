@@ -10,6 +10,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {Checkbox} from "@/components/ui/checkbox";
 
 export default function SalariesFilters({categories}: {categories: Category[]}) {
   const [filters, setFilter] = useFilters();
@@ -36,6 +37,21 @@ export default function SalariesFilters({categories}: {categories: Category[]}) 
           </SelectContent>
         </Select>
       </Label>
+
+      <div className="flex flex-col gap-2">
+        <Label className="flex w-full items-center gap-2" htmlFor="trusted">
+          <Checkbox
+            aria-label="Ocultar salarios con pocos reportes"
+            defaultChecked={filters.trusted}
+            id="trusted"
+            onCheckedChange={(checked) => setFilter("trusted", checked ? "true" : "")}
+          />
+          Ocultar salarios con pocos reportes
+        </Label>
+        <small className="leading-tight text-muted-foreground">
+          Oculta los salarios con menos de 2 reportes.
+        </small>
+      </div>
     </div>
   );
 }
