@@ -98,7 +98,7 @@ function HomePageClientContainer({
   return <HomePageClient filters={filters} salaries={groupedSalaries} />;
 }
 
-// We want to load this component only on the client side and show a skeleton while loading
+// We want to load this component only on the client side to handle search params reading on the client, mantaining page static. We also show a skeleton while loading
 export default dynamic(async () => HomePageClientContainer, {
   ssr: false,
   loading: HomePageLoading,
