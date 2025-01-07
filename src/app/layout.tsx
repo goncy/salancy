@@ -51,16 +51,7 @@ async function Footer() {
         </a>
         . Datos registrados el{" "}
         {new Date(process.env.NEXT_PUBLIC_POLL_DATE!).toLocaleString("es-AR", {dateStyle: "short"})}{" "}
-        con{" "}
-        <a
-          className="underline"
-          href={process.env.NEXT_PUBLIC_SALARY_SHEET_URL}
-          rel="noopener"
-          target="_blank"
-        >
-          {salaries.length} salarios reportados
-        </a>
-        .
+        con {salaries.length} salarios reportados.
       </p>
     </footer>
   );

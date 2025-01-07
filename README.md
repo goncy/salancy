@@ -4,20 +4,18 @@ Promedio de salarios en IT, administrado via Google Sheets.
 
 ## Como la uso?
 
-1. Crea una copia de [esta planilla de calculo](https://docs.google.com/spreadsheets/d/1T4bKoTOQQecslHno4R_8zIXCnjGjiStnh0VkBl9eMa0/edit?usp=sharing).
-2. Una vez copiada, toca en `Archivo > Publicar en la web`, selecciona `Valores separados por comas (.csv)` del desplegable y clickea en `publicar`.
-3. Asegurate que en vez de `Pagina web` diga `Valores separados por comas (.tsv)` y copia el enlace.
-4. Pega el enlace en un archivo `.env` en la variable `NEXT_PUBLIC_SALARY_SHEET_URL`.
-5. Publica el sitio en [algun hosting que soporte NextJS](https://vercel.com)
+Podés ver los resultados en https://salarios.gonzalopozzo.com
 
 ## Como colaborar
 
 Si pensas que podes agregar una funcionalidad que le sirva al resto, mandame un PR. Sino, podes mandarme un [cafecito](https://cafecito.app/goncy)
 
-## Proximas funcionalidades
+## Para próximas ediciones
 
-- [ ] Agregar un botón para descargar todos los datos en formato CSV.
-- [ ] Simplificar la tabla mostrando los datos en un formato más compacto.
+- Sacar el seniority de TL / Manager y agregarlo como una posición, hay mucha diferencia y el crecimiento no es orgánico.
+- Aclarar si reside en Argentina o agregar un campo para seleccionar el país / zona geográfica.
+- Armar mejores grupos (Web, Mobile, etc).
+- Agregar más posiciones.
 
 ---
 
