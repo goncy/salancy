@@ -50,7 +50,9 @@ async function Footer() {
           Goncy
         </a>
         . Datos registrados el{" "}
-        {new Date(process.env.NEXT_PUBLIC_POLL_DATE!).toLocaleString("es-AR", {dateStyle: "short"})}{" "}
+        {new Date(process.env.NEXT_PUBLIC_POLL_DATE!).toLocaleString(undefined, {
+          dateStyle: "short",
+        })}{" "}
         con {salaries.length} salarios reportados.
       </p>
     </footer>
