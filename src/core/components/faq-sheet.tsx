@@ -66,9 +66,8 @@ export default async function FAQSheet({salariesCount}: {salariesCount: number})
           <AccordionItem value="cantidad-reportes">
             <AccordionTrigger>¿Cuántos reportes hay?</AccordionTrigger>
             <AccordionContent>
-              Hay {salariesCount} salarios reportados. Si querés ver la cantidad de reportes para un
-              puesto en específico, en la sección de filtros podés marcar la opción{" "}
-              <code>Mostrar cantidad de reportes</code>.
+              Hay {salariesCount} salarios reportados. Podés ver la cantidad de reportes para cada
+              puesto en específico entre paréntesis junto a cada salario.
             </AccordionContent>
           </AccordionItem>
           <AccordionItem value="descargar-datos">

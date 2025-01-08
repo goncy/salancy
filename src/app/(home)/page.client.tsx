@@ -55,9 +55,7 @@ function HomePageClient({
                       {Boolean(salary.ars.count) && (
                         <span className="flex items-center gap-2">
                           {formatSalary(arsSalary, "ARS")}
-                          {Boolean(filters.count) && (
-                            <small className="text-muted-foreground">({salary.ars.count})</small>
-                          )}
+                          <small className="text-muted-foreground">({salary.ars.count})</small>
                         </span>
                       )}
                     </TableCell>
@@ -65,9 +63,7 @@ function HomePageClient({
                       {Boolean(salary.usd.count) && (
                         <span className="flex items-center gap-2">
                           {formatSalary(usdSalary, "USD")}
-                          {Boolean(filters.count) && (
-                            <small className="text-muted-foreground">({salary.usd.count})</small>
-                          )}
+                          <small className="text-muted-foreground">({salary.usd.count})</small>
                         </span>
                       )}
                     </TableCell>
