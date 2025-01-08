@@ -26,7 +26,7 @@ export default async function FAQSheet({salariesCount}: {salariesCount: number})
           <HelpCircle />
         </Button>
       </SheetTrigger>
-      <SheetContent className="flex w-full flex-col gap-6 md:w-[640px]" side="left">
+      <SheetContent className="flex w-full flex-col gap-6 md:w-[640px]">
         <SheetHeader>
           <SheetTitle>Preguntas Frecuentes</SheetTitle>
           <SheetDescription>Posiblemente tu pregunta ya la hizo alguien más.</SheetDescription>
