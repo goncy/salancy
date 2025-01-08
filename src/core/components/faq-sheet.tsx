@@ -76,31 +76,31 @@ export default async function FAQSheet({salariesCount}: {salariesCount: number})
               Aproximadamente en el mes de Abril se habilitará la descarga del dataset.
             </AccordionContent>
           </AccordionItem>
-          <AccordionItem value="ver-ediciones-anteriores">
-            <AccordionTrigger>¿Puedo ver las ediciones anteriores?</AccordionTrigger>
-            <AccordionContent>
-              Podés encontrar la versión del 2024{" "}
-              <a
-                className="underline"
-                href="https://2024.salarios.gonzalopozzo.com"
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                acá
-              </a>
-              .
-            </AccordionContent>
-          </AccordionItem>
           <AccordionItem value="salarios-desactualizados">
             <AccordionTrigger>¿Los salarios son recientes?</AccordionTrigger>
-            <AccordionContent>
-              Los salarios son del{" "}
-              {new Date(process.env.NEXT_PUBLIC_POLL_DATE!).toLocaleString(undefined, {
-                dateStyle: "short",
-              })}
-              . Sin embargo, en la sección de filtros podés habilitar{" "}
-              <code>Simular salarios actualizados</code> que toma en cuenta la inflación desde el
-              momento de la encuesta.
+            <AccordionContent className="flex flex-col gap-2">
+              <p>
+                Los salarios son del{" "}
+                {new Date(process.env.NEXT_PUBLIC_POLL_DATE!).toLocaleString(undefined, {
+                  dateStyle: "short",
+                })}
+                . Sin embargo, en la sección de filtros podés habilitar{" "}
+                <code>Simular salarios actualizados</code> que toma en cuenta la inflación desde el
+                momento de la encuesta.
+              </p>
+
+              <p>
+                En caso de que quieras ver los salarios de la encuesta del 2024, podés encontrarlos{" "}
+                <a
+                  className="underline"
+                  href="https://2024.salarios.gonzalopozzo.com"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  acá
+                </a>
+                .
+              </p>
             </AccordionContent>
           </AccordionItem>
           <AccordionItem value="salarios-argentina">
