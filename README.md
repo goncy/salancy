@@ -2,6 +2,8 @@
 
 Promedio de salarios en IT, administrado via Google Sheets.
 
+🚨 ** Esta es la versión 2024, para la versión actualizada mirá la rama [main](https://github.com/goncy/salancy/tree/main) **
+
 ## Como la uso?
 
 1. Crea una copia de [esta planilla de calculo](https://docs.google.com/spreadsheets/d/1T4bKoTOQQecslHno4R_8zIXCnjGjiStnh0VkBl9eMa0/edit?usp=sharing).
