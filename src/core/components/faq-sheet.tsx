@@ -34,7 +34,9 @@ export default async function FAQSheet({salariesCount}: {salariesCount: number})
         <Accordion collapsible type="single">
           <AccordionItem value="salarios-brutos-netos">
             <AccordionTrigger>¿Los salarios son brutos o netos?</AccordionTrigger>
-            <AccordionContent>Los salarios son brutos.</AccordionContent>
+            <AccordionContent>
+              Los salarios son brutos para posiciones full-time (~ 160 horas mensuales).
+            </AccordionContent>
           </AccordionItem>
           <AccordionItem value="media">
             <AccordionTrigger>¿Como se calculan los promedios?</AccordionTrigger>
@@ -69,6 +71,27 @@ export default async function FAQSheet({salariesCount}: {salariesCount: number})
               <code>Mostrar cantidad de reportes</code>.
             </AccordionContent>
           </AccordionItem>
+          <AccordionItem value="descargar-datos">
+            <AccordionTrigger>¿Puedo descargar los datos?</AccordionTrigger>
+            <AccordionContent>
+              Aproximadamente en el mes de Abril se habilitará la descarga del dataset.
+            </AccordionContent>
+          </AccordionItem>
+          <AccordionItem value="ver-ediciones-anteriores">
+            <AccordionTrigger>¿Puedo ver las ediciones anteriores?</AccordionTrigger>
+            <AccordionContent>
+              Podés encontrar la versión del 2024{" "}
+              <a
+                className="underline"
+                href="https://2024.salarios.gonzalopozzo.com"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                acá
+              </a>
+              .
+            </AccordionContent>
+          </AccordionItem>
           <AccordionItem value="salarios-desactualizados">
             <AccordionTrigger>¿Los salarios son recientes?</AccordionTrigger>
             <AccordionContent>
@@ -79,12 +102,6 @@ export default async function FAQSheet({salariesCount}: {salariesCount: number})
               . Sin embargo, en la sección de filtros podés habilitar{" "}
               <code>Simular salarios actualizados</code> que toma en cuenta la inflación desde el
               momento de la encuesta.
-            </AccordionContent>
-          </AccordionItem>
-          <AccordionItem value="fulltime-parttime">
-            <AccordionTrigger>¿Los salarios son full-time?</AccordionTrigger>
-            <AccordionContent>
-              Los salarios son de puestos full-time (~160 horas mensuales).
             </AccordionContent>
           </AccordionItem>
           <AccordionItem value="salarios-argentina">
