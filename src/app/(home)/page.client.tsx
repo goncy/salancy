@@ -2,12 +2,15 @@
 
 import dynamic from "next/dynamic";
 import {useMemo} from "react";
+import Image from "next/image";
 
 import type {Category, Salary} from "@/salary/types";
 import type {Filters} from "@/filter/types";
 import {filterSalaries, formatSalary, groupSalariesByPosition} from "@/salary/utils";
-import {Table, TableBody, TableCell, TableRow} from "@/components/ui/table";
+import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import {useFilters} from "@/filter/hooks/use-filters";
+import argentineFlag from "@/core/assets/argentine-flag.svg";
+import usFlag from "@/core/assets/us-flag.svg";
 
 import HomePageLoading from "./loading";
 
@@ -22,8 +25,24 @@ function HomePageClient({
     <section className="grid h-full grid-cols-[repeat(auto-fill,minmax(480px,1fr))] content-start gap-8 overflow-auto">
       {Object.entries(salaries).map(([position, salaries]) => (
         <div key={position} className="flex flex-col gap-2">
-          <p className="text-lg font-medium">{position}</p>
           <Table className="border">
+            <TableHeader className="bg-muted">
+              <TableRow className="h-14">
+                <TableHead className="text-lg font-medium text-foreground">{position}</TableHead>
+                <TableHead>
+                  <div className="flex items-center gap-2">
+                    <Image alt="ARS" height={18} src={argentineFlag} width={18} />
+                    ARS
+                  </div>
+                </TableHead>
+                <TableHead>
+                  <div className="flex items-center gap-2">
+                    <Image alt="USD" height={18} src={usFlag} width={18} />
+                    USD
+                  </div>
+                </TableHead>
+              </TableRow>
+            </TableHeader>
             <TableBody>
               {salaries.map((salary) => {
                 const arsSalary = filters.simulate ? salary.ars.current : salary.ars.original;
