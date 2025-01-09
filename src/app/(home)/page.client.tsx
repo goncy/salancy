@@ -52,19 +52,23 @@ function HomePageClient({
                   <TableRow key={salary.id} className="h-14">
                     <TableCell className="min-w-64">{salary.seniority}</TableCell>
                     <TableCell className="w-32 font-medium">
-                      {Boolean(salary.ars.count) && (
+                      {Boolean(salary.ars.count) ? (
                         <span className="flex items-center gap-2">
                           {formatSalary(arsSalary, "ARS")}
                           <small className="text-muted-foreground">({salary.ars.count})</small>
                         </span>
+                      ) : (
+                        "N/A"
                       )}
                     </TableCell>
                     <TableCell className="w-32 font-medium">
-                      {Boolean(salary.usd.count) && (
+                      {Boolean(salary.usd.count) ? (
                         <span className="flex items-center gap-2">
                           {formatSalary(usdSalary, "USD")}
                           <small className="text-muted-foreground">({salary.usd.count})</small>
                         </span>
+                      ) : (
+                        "N/A"
                       )}
                     </TableCell>
                   </TableRow>
