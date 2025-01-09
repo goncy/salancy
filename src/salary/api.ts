@@ -2,6 +2,8 @@ import type {Category, RawSalary} from "./types";
 
 import {unstable_cacheLife as cacheLife, unstable_cacheTag as cacheTag} from "next/cache";
 
+import mocks from "@/mocks";
+
 const api = {
   salary: {
     list: async (): Promise<RawSalary[]> => {
@@ -9,6 +11,10 @@ const api = {
 
       cacheLife("months");
       cacheTag("salary");
+
+      if (process.env.IS_OFFLINE) {
+        return mocks.salaries;
+      }
 
       // Fetch raw CSV data from Google Sheets
       const csv = await fetch(process.env.NEXT_PUBLIC_SALARY_SHEET_URL!).then((res) => res.text());
@@ -34,6 +40,10 @@ const api = {
 
         cacheLife("months");
         cacheTag("category");
+
+        if (process.env.IS_OFFLINE) {
+          return mocks.categories;
+        }
 
         // Fetch category data from Google Sheets
         const data = await fetch(process.env.NEXT_PUBLIC_CATEGORY_SHEET_URL!).then((res) =>
