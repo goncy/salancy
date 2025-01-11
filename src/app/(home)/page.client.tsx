@@ -50,8 +50,8 @@ function HomePageClient({
 
                 return (
                   <TableRow key={salary.id} className="h-14">
-                    <TableCell className="min-w-64">{salary.seniority}</TableCell>
-                    <TableCell className="w-32 font-medium">
+                    <TableCell className="w-full">{salary.seniority}</TableCell>
+                    <TableCell className="min-w-32 font-medium">
                       {Boolean(salary.ars.count) && (
                         <span className="flex items-center gap-2">
                           {formatSalary(arsSalary, "ARS")}
@@ -59,7 +59,7 @@ function HomePageClient({
                         </span>
                       )}
                     </TableCell>
-                    <TableCell className="w-32 font-medium">
+                    <TableCell className="min-w-32 font-medium">
                       {Boolean(salary.usd.count) && (
                         <span className="flex items-center gap-2">
                           {formatSalary(usdSalary, "USD")}
