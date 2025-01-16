@@ -25,14 +25,17 @@ const api = {
         const [day, month, year] = date.split("-");
 
         if (new Date(parseInt(year), parseInt(month) - 1, parseInt(day)) > startDate) {
-          return total + value;
+          return total * (1 + parseFloat(value) / 100);
         }
 
         return total;
-      }, 0);
+      }, 1); // We start the total with 1 for multiplicative identity
+
+      // Convert back from compounded total to percentage rate
+      const accumulatedRate = (accumulated - 1) * 100;
 
       // Round it to 2 decimals
-      return Math.round(accumulated * 100) / 100;
+      return Math.round(accumulatedRate * 100) / 100;
     },
   },
 };
