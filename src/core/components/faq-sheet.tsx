@@ -33,6 +33,14 @@ export default async function FAQSheet({salariesCount}: {salariesCount: number})
         </SheetHeader>
         <Accordion collapsible type="single">
           <AccordionItem value="salarios-brutos-netos">
+            <AccordionTrigger>¿Como se obtuvieron los salarios?</AccordionTrigger>
+            <AccordionContent>
+              Los salarios se obtuvieron mediante convocatoria abierta en un formulario de Google
+              Forms. Los resultados fueron manualmente revisados y filtrados previo a ser usado. A
+              le gente se le preguntó su puesto, seniority, salario y moneda.
+            </AccordionContent>
+          </AccordionItem>
+          <AccordionItem value="salarios-brutos-netos">
             <AccordionTrigger>¿Los salarios son brutos o netos?</AccordionTrigger>
             <AccordionContent>
               Los salarios son brutos para posiciones full-time (~ 160 horas mensuales).
