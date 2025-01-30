@@ -32,7 +32,7 @@ export default async function FAQSheet({salariesCount}: {salariesCount: number})
           <SheetDescription>Posiblemente tu pregunta ya la hizo alguien más.</SheetDescription>
         </SheetHeader>
         <Accordion collapsible type="single">
-          <AccordionItem value="salarios-brutos-netos">
+          <AccordionItem value="salarios-obtenidos">
             <AccordionTrigger>¿Como se obtuvieron los salarios?</AccordionTrigger>
             <AccordionContent>
               Los salarios se obtuvieron mediante convocatoria abierta en un formulario de Google
