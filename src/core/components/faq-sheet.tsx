@@ -81,7 +81,16 @@ export default async function FAQSheet({salariesCount}: {salariesCount: number})
           <AccordionItem value="descargar-datos">
             <AccordionTrigger>¿Puedo descargar los datos?</AccordionTrigger>
             <AccordionContent>
-              Aproximadamente en el mes de Abril se habilitará la descarga del dataset.
+              Si, podés descargar el dataset completo en formato TSV{" "}
+              <a
+                className="underline"
+                href={process.env.NEXT_PUBLIC_SALARY_SHEET_URL!}
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                acá
+              </a>
+              .
             </AccordionContent>
           </AccordionItem>
           <AccordionItem value="salarios-desactualizados">
