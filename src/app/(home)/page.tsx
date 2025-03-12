@@ -14,7 +14,7 @@ export default async function Home() {
     indicesApi.inflation.index(),
   ]);
 
-  // Process raw salaries into mean values. We pass the inflation because we have a filter to show simulated values
+  // Process raw salaries into mean values. We pass the inflation because we have a filter to show originald values
   const meanSalaries = calculateMeanSalaries(salaries, inflation);
 
   return (

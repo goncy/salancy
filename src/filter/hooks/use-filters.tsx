@@ -22,7 +22,7 @@ export function useFilters(): [Filters, typeof setFilter] {
 
   const filters: Filters = {
     trusted: searchParams.get("trusted") === "true",
-    simulate: searchParams.get("simulate") === "true",
+    original: searchParams.get("original") === "true",
     category: searchParams.get("category") || "",
   };
 

@@ -1,5 +1,5 @@
 export interface Filters {
-  simulate: boolean;
+  original: boolean;
   category: string;
   trusted: boolean;
 }

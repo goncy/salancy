@@ -45,7 +45,7 @@ function HomePageClient({
             </TableHeader>
             <TableBody>
               {salaries.map((salary) => {
-                const arsSalary = filters.simulate ? salary.ars.current : salary.ars.original;
+                const arsSalary = filters.original ? salary.ars.original : salary.ars.current;
                 const usdSalary = salary.usd.original;
 
                 return (

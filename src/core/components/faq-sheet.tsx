@@ -106,9 +106,10 @@ export default async function FAQSheet({salariesCount}: {salariesCount: number})
                 {new Date(process.env.NEXT_PUBLIC_POLL_DATE!).toLocaleString(undefined, {
                   dateStyle: "short",
                 })}
-                . Sin embargo, en la sección de filtros podés habilitar{" "}
-                <code>Simular salarios actualizados</code> que toma en cuenta la inflación desde el
-                momento de la encuesta.
+                . Sin embargo se muestran los salarios actualizados a día de hoy tomando en cuenta
+                la inflación desde el momento de la encuesta. En la sección de filtros podés
+                habilitar <code>Mostrar salarios originales</code> para ver los salarios sin
+                actualización por inflación.
               </p>
 
               <p>

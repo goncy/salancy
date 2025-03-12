@@ -15,7 +15,7 @@ import {useFilters} from "../../hooks/use-filters";
 function FilterSheetTriggerContainer() {
   const [filters] = useFilters();
   const hasFilters = useMemo(
-    () => ["category", "simulate"].some((key) => Boolean(filters[key as keyof Filters])),
+    () => ["category", "original"].some((key) => Boolean(filters[key as keyof Filters])),
     [filters],
   );
 

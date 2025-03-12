@@ -10,18 +10,18 @@ export default function Settings({inflation}: {inflation: number}) {
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-2">
-        <Label className="flex w-full items-center gap-2" htmlFor="simulate">
+        <Label className="flex w-full items-center gap-2" htmlFor="original">
           <Checkbox
-            aria-label="Simular salarios actualizados"
-            defaultChecked={filters.simulate}
-            id="simulate"
-            onCheckedChange={(checked) => setFilter("simulate", checked ? "true" : "")}
+            aria-label="Mostrar salarios originales"
+            defaultChecked={filters.original}
+            id="original"
+            onCheckedChange={(checked) => setFilter("original", checked ? "true" : "")}
           />
-          Simular salarios actualizados
+          Mostrar salarios originales
         </Label>
         <small className="leading-tight text-muted-foreground">
-          Simulamos los valores usando la inflación desde cuando la gente subió su salario (
-          {inflation}%).
+          Mostrar los valores originales sin aplicar el {inflation}% de inflación desde cuando la
+          gente subió su salario.
         </small>
       </div>
     </div>
