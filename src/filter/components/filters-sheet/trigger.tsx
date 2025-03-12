@@ -1,5 +1,7 @@
 "use client";
 
+import type {Filters} from "../../types";
+
 import {Filter} from "lucide-react";
 import {useMemo} from "react";
 import dynamic from "next/dynamic";
@@ -9,7 +11,6 @@ import {SheetTrigger} from "@/components/ui/sheet";
 import {Skeleton} from "@/components/ui/skeleton";
 
 import {useFilters} from "../../hooks/use-filters";
-import {Filters} from "../../types";
 
 function FilterSheetTriggerContainer() {
   const [filters] = useFilters();
@@ -20,7 +21,7 @@ function FilterSheetTriggerContainer() {
 
   return (
     <SheetTrigger asChild>
-      <Button className="relative" size="icon" variant="outline">
+      <Button aria-label="Abrir filtros" className="relative" size="icon" variant="outline">
         <Filter />
         {Boolean(hasFilters) && (
           <span className="absolute -right-1 -top-1 h-2.5 w-2.5 rounded-full border border-secondary bg-primary" />

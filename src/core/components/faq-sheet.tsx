@@ -22,7 +22,12 @@ export default async function FAQSheet({salariesCount}: {salariesCount: number})
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button className="relative" size="icon" variant="outline">
+        <Button
+          aria-label="Abrir preguntas frecuentes"
+          className="relative"
+          size="icon"
+          variant="outline"
+        >
           <HelpCircle />
         </Button>
       </SheetTrigger>

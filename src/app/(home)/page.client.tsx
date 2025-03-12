@@ -26,18 +26,18 @@ function HomePageClient({
       {Object.entries(salaries).map(([position, salaries]) => (
         <div key={position} className="flex flex-col gap-2">
           <Table className="border">
-            <TableHeader className="bg-muted">
+            <TableHeader className="bg-muted/50">
               <TableRow className="h-14">
                 <TableHead className="text-lg font-medium text-foreground">{position}</TableHead>
                 <TableHead>
                   <div className="flex items-center gap-2">
-                    <Image alt="ARS" height={18} src={argentineFlag} width={18} />
+                    <Image alt="bandera argentina" height={18} src={argentineFlag} width={18} />
                     ARS
                   </div>
                 </TableHead>
                 <TableHead>
                   <div className="flex items-center gap-2">
-                    <Image alt="USD" height={18} src={usFlag} width={18} />
+                    <Image alt="bandera EEUU" height={18} src={usFlag} width={18} />
                     USD
                   </div>
                 </TableHead>
