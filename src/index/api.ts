@@ -10,7 +10,7 @@ const api = {
 
       // Get inflation data from Dolarito
       const inflation = await fetch(
-        "https://www.dolarito.ar/api/frontend/indices/inflacionMensual",
+        "https://api.dolarito.ar/api/frontend/indices/inflacionMensual",
         {
           headers: {
             "auth-client": process.env.DOLARITO_TOKEN!,
