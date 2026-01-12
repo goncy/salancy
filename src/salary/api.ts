@@ -1,6 +1,6 @@
 import type {Category, RawSalary} from "./types";
 
-import {unstable_cacheLife as cacheLife, unstable_cacheTag as cacheTag} from "next/cache";
+import {cacheLife, cacheTag} from "next/cache";
 
 const api = {
   salary: {

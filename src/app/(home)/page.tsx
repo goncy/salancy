@@ -18,7 +18,7 @@ export default async function Home() {
   const meanSalaries = calculateMeanSalaries(salaries, inflation);
 
   return (
-    <div className="container m-auto grid h-screen grid-rows-[auto,1fr,auto] gap-4 overflow-hidden bg-background p-4 font-sans antialiased md:gap-4">
+    <div className="container m-auto flex h-screen flex-col gap-4 overflow-hidden bg-background p-4 font-sans antialiased">
       {/* Header including logo and filter sheet */}
       <header className="flex items-center justify-between">
         <b className="text-xl font-bold">💸 Salancy</b>
@@ -29,7 +29,7 @@ export default async function Home() {
       </header>
 
       {/* Main section containing the salary tables */}
-      <main className="overflow-hidden">
+      <main className="min-h-0 flex-1 overflow-hidden">
         <HomePageClient categories={categories} salaries={meanSalaries} />;
       </main>
 

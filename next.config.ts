@@ -2,9 +2,9 @@ import {NextConfig} from "next";
 import {INFINITE_CACHE} from "next/dist/lib/constants";
 
 const nextConfig: NextConfig = {
+  cacheComponents: true,
+  reactCompiler: true,
   experimental: {
-    reactCompiler: true,
-    dynamicIO: true,
     cacheLife: {
       months: {
         stale: 60 * 60 * 24 * 30,
