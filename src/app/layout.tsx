@@ -41,6 +41,21 @@ export const metadata: Metadata = {
 export default async function RootLayout({children}: {children: React.ReactNode}) {
   return (
     <html lang="es">
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                
+                if (systemDark) {
+                  document.documentElement.setAttribute('data-theme', 'dark');
+                }
+              })()
+            `,
+          }}
+        />
+      </head>
       <body>
         {children}
         <Analytics />

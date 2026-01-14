@@ -1,8 +1,10 @@
-import type {Category, RawSalary} from "./types";
+import type { Category, RawSalary } from "./types";
 
 import Papa from "papaparse";
 
-import {cacheLife, cacheTag} from "next/cache";
+import { cacheLife, cacheTag } from "next/cache";
+
+import mocks from "@/mocks";
 
 const api = {
   salary: {
@@ -12,12 +14,16 @@ const api = {
       cacheLife("months");
       cacheTag("salary");
 
+      if (process.env.IS_OFFLINE) {
+        return mocks.salaries;
+      }
+
       // Fetch raw CSV data from Google Sheets
       const csv = await fetch(process.env.NEXT_PUBLIC_SALARY_SHEET_URL!).then((res) => res.text());
 
 
       // Parse CSV data into RawSalary objects
-      const {data} = Papa.parse<RawSalary>(csv, {
+      const { data } = Papa.parse<RawSalary>(csv, {
         header: true,
         skipEmptyLines: true,
         transformHeader: (header) => {
@@ -58,6 +64,10 @@ const api = {
         cacheLife("months");
         cacheTag("category");
 
+        if (process.env.IS_OFFLINE) {
+          return mocks.categories;
+        }
+
         // Fetch category data from Google Sheets
         const data = await fetch(process.env.NEXT_PUBLIC_CATEGORY_SHEET_URL!).then((res) =>
           res.text(),
@@ -69,7 +79,7 @@ const api = {
           .trim()
           .split("\t")
           .filter(Boolean)
-          .map((name) => ({name, positions: []}));
+          .map((name) => ({ name, positions: [] }));
 
         // Parse each row and assign positions to their respective categories
         // Each column in a row corresponds to a position in that category

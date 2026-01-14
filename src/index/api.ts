@@ -1,4 +1,6 @@
-import {cacheLife, cacheTag} from "next/cache";
+import { cacheLife, cacheTag } from "next/cache";
+
+import mocks from "@/mocks"
 
 const api = {
   inflation: {
@@ -7,6 +9,10 @@ const api = {
 
       cacheLife("months");
       cacheTag("inflation");
+
+      if (process.env.IS_OFFLINE) {
+        return mocks.inflation;
+      }
 
       // Get inflation data from Dolarito
       const inflation = await fetch(

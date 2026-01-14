@@ -1,10 +1,11 @@
 import salaryApi from "@/salary/api";
 import indicesApi from "@/index/api";
-import {calculateMeanSalaries} from "@/salary/utils";
+import { calculateMeanSalaries } from "@/salary/utils";
 import FilterSheet from "@/filter/components/filters-sheet";
 import FAQSheet from "@/core/components/faq-sheet";
 
 import HomePageClient from "./page.client";
+import { ThemeButton } from "@/core/components/theme-button";
 
 export default async function Home() {
   // Fetch all required data in parallel
@@ -25,6 +26,7 @@ export default async function Home() {
         <nav className="flex items-center gap-2">
           <FAQSheet salariesCount={salaries.length} />
           <FilterSheet />
+          <ThemeButton />
         </nav>
       </header>
 
