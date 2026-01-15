@@ -15,7 +15,6 @@ const api = {
       // Fetch raw CSV data from Google Sheets
       const csv = await fetch(process.env.NEXT_PUBLIC_SALARY_SHEET_URL!).then((res) => res.text());
 
-
       // Parse CSV data into RawSalary objects
       const {data} = Papa.parse<RawSalary>(csv, {
         header: true,
