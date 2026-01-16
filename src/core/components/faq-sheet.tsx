@@ -19,6 +19,8 @@ import {
 } from "@/components/ui/accordion";
 
 export default async function FAQSheet({salariesCount}: {salariesCount: number}) {
+  const date = new Date(process.env.NEXT_PUBLIC_POLL_DATE!);
+
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -103,7 +105,7 @@ export default async function FAQSheet({salariesCount}: {salariesCount: number})
             <AccordionContent className="flex flex-col gap-2">
               <p>
                 Los salarios son del{" "}
-                {new Date(process.env.NEXT_PUBLIC_POLL_DATE!).toLocaleString(undefined, {
+                {date.toLocaleString(undefined, {
                   dateStyle: "short",
                 })}
                 . Sin embargo se muestran los salarios actualizados a día de hoy tomando en cuenta
@@ -113,10 +115,11 @@ export default async function FAQSheet({salariesCount}: {salariesCount: number})
               </p>
 
               <p>
-                En caso de que quieras ver los salarios de la encuesta del 2024, podés encontrarlos{" "}
+                En caso de que quieras ver los salarios de la encuesta del {date.getFullYear() - 1},
+                podés encontrarlos{" "}
                 <a
                   className="underline"
-                  href="https://2024.salarios.gonzalopozzo.com"
+                  href={`https://${date.getFullYear() - 1}.salarios.gonzalopozzo.com`}
                   rel="noopener noreferrer"
                   target="_blank"
                 >
