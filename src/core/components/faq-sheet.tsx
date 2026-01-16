@@ -132,8 +132,9 @@ export default async function FAQSheet({salariesCount}: {salariesCount: number})
           <AccordionItem value="salarios-argentina">
             <AccordionTrigger>¿Los salarios son de Argentina?</AccordionTrigger>
             <AccordionContent>
-              En un 96% de los casos, los salarios son de residentes en Argentina. En futuras
-              ediciones se agregará una pregunta para indicar la zona geográfica.
+              En un 96% de los casos, los salarios son de residentes en Argentina. En el dataset se
+              incluye la zona de residencia, todavía no está discriminado en esta encuesta pero haré
+              algo en el futuro.
             </AccordionContent>
           </AccordionItem>
         </Accordion>
